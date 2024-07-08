@@ -13,3 +13,4 @@ p
   = @game.updated_at
 
 = link_to 'Back to Games', games_path
+= button_to 'Delete', game_path(@game), method: :delete, class: 'btn btn--danger'
