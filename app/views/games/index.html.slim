@@ -1,0 +1,6 @@
+h1 Games
+
+ul
+  - @games.each do |game|
+    li
+      = link_to "Game ##{game.id}", game_path(game)

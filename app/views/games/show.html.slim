@@ -1,0 +1,15 @@
+h1 Game Details
+
+p
+  | Game ID:
+  = @game.id
+
+p
+  | Created at:
+  = @game.created_at
+
+p
+  | Updated at:
+  = @game.updated_at
+
+= link_to 'Back to Games', games_path
