@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :games do
-    resources :game_users, only: [:create]
+    resources :game_users, only: [:create, :destroy]
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

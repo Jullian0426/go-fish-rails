@@ -12,3 +12,4 @@ ul
 = link_to 'Back to Games', games_path
 = link_to 'Edit', edit_game_path(@game), class: 'btn btn--secondary'
 = button_to 'Delete', game_path(@game), method: :delete, class: 'btn btn--danger'
+= button_to 'Leave Game', game_game_user_path(@game), method: :delete, data: { confirm: 'Are you sure you want to leave this game?' }, class: 'btn btn--danger'

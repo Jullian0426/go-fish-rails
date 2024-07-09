@@ -23,7 +23,8 @@ class GamesController < ApplicationController
     @game = Game.build(game_params)
 
     if @game.save
-      redirect_to games_path, notice: 'Game was successfully created.'
+      @game.users << current_user
+      redirect_to @game, notice: 'Game was successfully created.'
     else
       render :new
     end
