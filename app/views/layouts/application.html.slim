@@ -12,4 +12,6 @@ html
     = turbo_frame_tag 'panel'
     = render 'confirm'
     .app__content
+      .flash
+        = render 'layouts/flash'
       = yield

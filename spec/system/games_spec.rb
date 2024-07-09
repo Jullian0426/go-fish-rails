@@ -7,25 +7,34 @@ RSpec.describe 'Games', type: :system, js: true do
   let!(:game1) { create(:game, name: 'Game 1') }
   let!(:game2) { create(:game, name: 'Game 2') }
 
+  def join_game
+    within 'li', text: game1.name do
+      click_button 'Join Game'
+    end
+  end
+
   before do
     login_as(user, scope: :user)
     visit games_path
   end
 
   describe 'index page' do
-    it 'shows all games and allows creating a new game' do
+    it 'shows all games' do
       expect(page).to have_content('All Games')
-      expect(page).to have_link(game1.name, href: game_path(game1))
-      expect(page).to have_link(game2.name, href: game_path(game2))
+      expect(page).to have_content('Your Games')
       expect(page).to have_link('Create New Game', href: new_game_path)
+      expect(page).to have_content(game1.name)
+      expect(page).to have_content(game2.name)
+    end
 
-      click_link 'Create New Game'
-      expect(page).to have_content('New Game')
+    it 'shows your games' do
+      expect(page).to have_content('You have not joined any games yet.')
+      expect(page).not_to have_link(game1.name, href: game_path(game1))
 
-      fill_in 'Name', with: 'New Game'
-      click_button 'Create Game'
+      join_game
 
-      expect(page).to have_content('New Game')
+      visit games_path
+      expect(page).to have_link(game1.name, href: game_path(game1))
     end
   end
 
@@ -41,14 +50,16 @@ RSpec.describe 'Games', type: :system, js: true do
   end
 
   describe 'show page' do
-    it 'shows game details' do
+    it 'shows game details and users' do
+      join_game
       visit game_path(game1)
 
       expect(page).to have_content('Game Details')
       expect(page).to have_content("Game Name: #{game1.name}")
-      expect(page).to have_content("Game ID: #{game1.id}")
       expect(page).to have_content('Edit')
       expect(page).to have_content('Delete')
+      expect(page).to have_content('Users in this game')
+      expect(page).to have_content(user.name)
     end
   end
 
@@ -56,7 +67,7 @@ RSpec.describe 'Games', type: :system, js: true do
     it 'allows editing an existing game' do
       visit edit_game_path(game1)
 
-      fill_in 'Name', with: "Edited #{game1.name}"
+      find_field('Name').set("Edited #{game1.name}")
       click_button 'Update Game'
 
       expect(page).to have_content("Game Name: Edited #{game1.name}")

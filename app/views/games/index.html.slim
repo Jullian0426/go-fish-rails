@@ -1,3 +1,14 @@
+h1 Your Games
+
+- if @user_games.present?
+  ul
+    - @user_games.each do |game|
+      li
+        = link_to game.name, game_path(game)
+- else
+  p You have not joined any games yet.
+
+
 h1 All Games
 
 = link_to 'Create New Game', new_game_path, class: 'btn btn--primary'
@@ -5,4 +16,6 @@ h1 All Games
 ul
   - @games.each do |game|
     li
-      = link_to game.name, game_path(game)
+      = game.name
+      - unless @user_games.include?(game)
+        = button_to 'Join Game', game_game_users_path(game), method: :post, class: 'btn btn--primary'
