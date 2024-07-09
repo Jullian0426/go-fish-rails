@@ -1,4 +1,6 @@
+h1 Edit Game
+
 = simple_form_for @game do |f|
   = f.input :name, input_html: { autofocus: true }
-  = link_to "Cancel", games_path, class: "btn btn--light"
+  = link_to "Cancel", @game, class: "btn btn--light"
   = f.submit 'Update Game', class: "btn btn--secondary"

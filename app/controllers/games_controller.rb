@@ -8,7 +8,7 @@ class GamesController < ApplicationController
   end
 
   def new
-    @game = Game.new
+    @game = Game.build
   end
 
   def edit
@@ -16,7 +16,7 @@ class GamesController < ApplicationController
   end
 
   def create
-    @game = Game.new(game_params)
+    @game = Game.build(game_params)
 
     if @game.save
       redirect_to games_path, notice: 'Game was successfully created.'

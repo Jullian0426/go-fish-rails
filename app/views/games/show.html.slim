@@ -1,20 +1,12 @@
 h1 Game Details
 
 p
-  | Game Name:
+  |> Game Name:
   = @game.name
 
 p
-  | Game ID:
+  |> Game ID:
   = @game.id
-
-p
-  | Created at:
-  = @game.created_at
-
-p
-  | Updated at:
-  = @game.updated_at
 
 = link_to 'Back to Games', games_path
 = link_to 'Edit', edit_game_path(@game), class: 'btn btn--secondary'
