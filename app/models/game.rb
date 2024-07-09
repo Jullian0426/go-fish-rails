@@ -3,4 +3,5 @@ class Game < ApplicationRecord
   has_many :users, through: :game_users
 
   validates :name, presence: true
+  validates :required_player_count, presence: true, numericality: { only_integer: true, greater_than: 1 }
 end

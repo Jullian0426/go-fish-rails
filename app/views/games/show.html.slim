@@ -4,6 +4,8 @@ p
   |> Game Name:
   = @game.name
 
+span #{@game.users.count}/#{@game.required_player_count} Players
+
 h2 Users in this game
 ul
   - @users.each do |user|

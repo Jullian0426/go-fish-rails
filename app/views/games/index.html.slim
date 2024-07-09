@@ -4,7 +4,8 @@ h1 Your Games
   ul
     - @user_games.each do |game|
       li
-        = link_to game.name, game_path(game)
+        => link_to game.name, game_path(game)
+        span #{game.users.count}/#{game.required_player_count} Players
 - else
   p You have not joined any games yet.
 
@@ -16,6 +17,7 @@ h1 All Games
 ul
   - @games.each do |game|
     li
-      = game.name
+      span> #{game.name}
+      span #{game.users.count}/#{game.required_player_count} Players
       - unless @user_games.include?(game)
         = button_to 'Join Game', game_game_users_path(game), method: :post, class: 'btn btn--primary'
