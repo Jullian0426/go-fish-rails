@@ -9,10 +9,12 @@ class GamesController < ApplicationController
 
   def new
     @game = Game.build
+    @path = games_path
   end
 
   def edit
     @game = Game.find(params[:id])
+    @path = @game
   end
 
   def create
