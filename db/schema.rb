@@ -15,6 +15,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_09_141013) do
   enable_extension "plpgsql"
 
   create_table "game_users", force: :cascade do |t|
+    # TODO: use index for uniqueness
     t.bigint "game_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false

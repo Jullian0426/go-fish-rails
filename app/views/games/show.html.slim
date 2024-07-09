@@ -8,8 +8,11 @@ span #{@game.users.count}/#{@game.required_player_count} Players
 
 h2 Users in this game
 ul
-  - @users.each do |user|
+  - @game.users.each do |user|
     li = user.name
+
+- if @enough_players
+  span Game is ready to start
 
 = link_to 'Back to Games', games_path
 = link_to 'Edit', edit_game_path(@game), class: 'btn btn--secondary'

@@ -6,7 +6,8 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
-    @users = @game.users
+    # TODO: move to game
+    @enough_players = @game.users.count == @game.required_player_count
   end
 
   def new
