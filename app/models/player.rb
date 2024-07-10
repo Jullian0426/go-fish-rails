@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 class Player
-  attr_accessor :api_key, :hand, :books
-  attr_reader :name
+  attr_accessor :hand, :books
+  attr_reader :user_id
 
-  def initialize(name)
-    @name = name
-    @api_key = SecureRandom.hex(10)
+  def initialize(user_id)
+    @user_id = user_id
     @hand = []
     @books = []
   end
