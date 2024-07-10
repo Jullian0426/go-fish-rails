@@ -17,18 +17,12 @@ class Deck
   def make_cards
     Card::SUITS.flat_map do |suit|
       Card::RANKS.map do |rank|
-        Card.new(rank, suit)
+        Card.new(rank:, suit:)
       end
     end
   end
 
   def deal
     cards.pop
-  end
-
-  def as_json
-    {
-      cards: cards.map(&:as_json)
-    }
   end
 end

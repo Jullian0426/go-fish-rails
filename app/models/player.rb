@@ -4,10 +4,10 @@ class Player
   attr_accessor :hand, :books
   attr_reader :user_id
 
-  def initialize(user_id)
+  def initialize(user_id:, hand: [], books: [])
     @user_id = user_id
-    @hand = []
-    @books = []
+    @hand = hand
+    @books = books
   end
 
   def add_to_hand(*cards)

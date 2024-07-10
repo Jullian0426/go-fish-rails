@@ -10,8 +10,9 @@ RSpec.describe Game, type: :model do
     create(:game_user, game:, user: user2)
   end
 
+  # TODO: test return block and middle of method
   describe '#start!' do
-    it 'updates the database' do
+    it 'updates go_fish attribute' do
       expect(game.go_fish).to be_nil
 
       game.start!

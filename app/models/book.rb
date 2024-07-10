@@ -11,10 +11,4 @@ class Book
   def rank
     cards.first.rank
   end
-
-  def as_json
-    {
-      cards: cards.map(&:as_json)
-    }
-  end
 end
