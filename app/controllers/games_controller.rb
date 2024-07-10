@@ -1,13 +1,10 @@
 class GamesController < ApplicationController
   def index
     @games = Game.all
-    @user_games = current_user.games
   end
 
   def show
     @game = Game.find(params[:id])
-    # TODO: move to game
-    @enough_players = @game.users.count == @game.required_player_count
   end
 
   def new

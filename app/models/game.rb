@@ -4,4 +4,12 @@ class Game < ApplicationRecord
 
   validates :name, presence: true
   validates :required_player_count, presence: true, numericality: { only_integer: true, greater_than: 1 }
+
+  def enough_players?
+    users.count == required_player_count
+  end
+
+  def start!
+    
+  end
 end

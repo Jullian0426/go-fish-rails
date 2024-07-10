@@ -2,15 +2,15 @@ example_id                                    | status  | run_time        |
 --------------------------------------------- | ------- | --------------- |
 ./spec/helpers/game_helper_spec.rb[1:1]       | pending | 0 seconds       |
 ./spec/helpers/game_users_helper_spec.rb[1:1] | pending | 0 seconds       |
-./spec/models/game_spec.rb[1:1]               | passed  | 0.05432 seconds |
-./spec/models/game_user_spec.rb[1:1]          | passed  | 0.05384 seconds |
+./spec/models/game_spec.rb[1:1]               | pending | 0 seconds       |
+./spec/models/game_user_spec.rb[1:1]          | passed  | 0.05528 seconds |
 ./spec/models/user_spec.rb[1:1]               | pending | 0 seconds       |
-./spec/requests/game_spec.rb[1:1:1]           | pending | 0 seconds       |
+./spec/requests/game_spec.rb[1:1:1]           | pending | 0.00001 seconds |
 ./spec/requests/game_users_spec.rb[1:1:1]     | pending | 0 seconds       |
-./spec/system/game_users_spec.rb[1:1]         | passed  | 0.14841 seconds |
-./spec/system/games_spec.rb[1:1:1]            | passed  | 0.10942 seconds |
-./spec/system/games_spec.rb[1:1:2]            | passed  | 0.14334 seconds |
-./spec/system/games_spec.rb[1:2:1]            | passed  | 0.27477 seconds |
-./spec/system/games_spec.rb[1:3:1]            | passed  | 5.44 seconds    |
-./spec/system/games_spec.rb[1:4:1]            | passed  | 0.15568 seconds |
-./spec/system/games_spec.rb[1:5:1]            | passed  | 0.1645 seconds  |
+./spec/system/game_users_spec.rb[1:1]         | passed  | 5.91 seconds    |
+./spec/system/games_spec.rb[1:1:1]            | passed  | 0.11426 seconds |
+./spec/system/games_spec.rb[1:1:2]            | passed  | 0.14764 seconds |
+./spec/system/games_spec.rb[1:2:1]            | passed  | 0.19244 seconds |
+./spec/system/games_spec.rb[1:3:1]            | passed  | 0.1764 seconds  |
+./spec/system/games_spec.rb[1:4:1]            | passed  | 0.24406 seconds |
+./spec/system/games_spec.rb[1:5:1]            | passed  | 0.12231 seconds |
