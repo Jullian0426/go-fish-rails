@@ -9,6 +9,7 @@ example_id                                    | status  | run_time        |
 ./spec/models/game_spec.rb[1:1:2:1]           | passed  | 0.05715 seconds |
 ./spec/models/game_spec.rb[1:1:2:2]           | passed  | 0.00767 seconds |
 ./spec/models/game_spec.rb[1:1:2:3]           | passed  | 0.00829 seconds |
+./spec/models/game_spec.rb[1:2:1]             | passed  | 0.03825 seconds |
 ./spec/models/game_user_spec.rb[1:1]          | passed  | 0.05528 seconds |
 ./spec/models/go_fish_spec.rb[1:1:1]          | passed  | 0.00103 seconds |
 ./spec/models/go_fish_spec.rb[1:2:1:1]        | unknown |                 |

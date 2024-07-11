@@ -49,8 +49,12 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  # TODO: specifically test go_fish
   describe '#go_fish' do
-
+    it 'returns a GoFish object' do
+      player1 = Player.new(user_id: user1.id)
+      player2 = Player.new(user_id: user2.id)
+      game.go_fish = GoFish.new(players: [player1, player2])
+      expect(game.go_fish).to be_an_instance_of(GoFish)
+    end
   end
 end
