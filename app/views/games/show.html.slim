@@ -11,8 +11,28 @@ ul
   - @game.users.each do |user|
     li = user.name
 
-- if @game.enough_players?
-  span enough players
+- if @game.go_fish
+  h2> Game data:
+  h3 Players and their hands
+  ul
+    - @game.go_fish.players.each do |player|
+      li
+        | Player ID:
+        = player.user_id
+        ul
+          - player.hand.each do |card|
+            li
+              | #{card.rank} of #{card.suit}
+
+  h3 Current Player
+  p
+    | Player ID:
+    = @game.go_fish.current_player.user_id
+
+  h3 Deck
+  p
+    | Cards remaining in deck:
+    = @game.go_fish.deck.cards.count
 
 = link_to 'Back to Games', games_path
 = link_to 'Edit', edit_game_path(@game), class: 'btn btn--secondary'

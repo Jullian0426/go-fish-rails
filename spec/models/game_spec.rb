@@ -28,7 +28,7 @@ RSpec.describe Game, type: :model do
 
         game.start!
 
-        expect(game.go_fish).not_to be_nil
+        expect(game.reload.go_fish).not_to be_nil
       end
 
       it 'initializes GoFish with the correct players' do
