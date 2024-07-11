@@ -1,10 +1,12 @@
 class GamesController < ApplicationController
+  before_action :authenticate_user!
+  before_action :set_game, only: [:show, :edit, :update, :destroy]
+
   def index
     @games = Game.all
   end
 
   def show
-    @game = Game.find(params[:id])
   end
 
   def new
@@ -13,7 +15,6 @@ class GamesController < ApplicationController
   end
 
   def edit
-    @game = Game.find(params[:id])
     @path = @game
   end
 
@@ -29,23 +30,32 @@ class GamesController < ApplicationController
   end
 
   def update
-    @game = Game.find(params[:id])
-    if @game.update(game_params)
-      redirect_to @game, notice: 'Game was successfully updated.'
+    opponent_user_id = params[:opponent].to_i
+    rank = params[:rank]
+
+    if @game.play_round!(opponent_user_id, rank)
+      redirect_to @game, notice: "You asked for a #{rank} from #{User.find(opponent_user_id).name}."
     else
-      render :edit, status: :unprocessable_entity
+      redirect_to @game, alert: "Turn failed. Please try again."
     end
   end
 
   def destroy
-    @game = Game.find(params[:id])
     @game.destroy
     redirect_to games_path, notice: 'Game was successfully deleted.'
   end
 
   private
 
+  def set_game
+    @game = Game.find(params[:id])
+  end
+
   def game_params
     params.require(:game).permit(:name, :required_player_count)
+  end
+
+  def turn_params
+    params.require(:game).permit(:opponent, :rank)
   end
 end

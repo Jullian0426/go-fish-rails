@@ -1,38 +1,55 @@
-h1 Game Details
-
-p
-  |> Game Name:
+h1
   = @game.name
 
-span #{@game.users.count}/#{@game.required_player_count} Players
+- if @game.started?
+  p Current Player: #{User.find(@game.go_fish.current_player.user_id).name}
 
-h2 Users in this game
-ul
-  - @game.users.each do |user|
-    li = user.name
-
-- if @game.go_fish
-  h2> Game data:
-  h3 Players and their hands
   ul
-    - @game.go_fish.players.each do |player|
-      li
-        | Player ID:
-        = player.user_id
+  - @game.go_fish.players.each do |player|
+    - is_current_user = player.user_id == current_user.id
+    li
+      - if is_current_user
+        strong = current_user.name
+      - else
+        = User.find(player.user_id).name
+
+      - if is_current_user
+        br
+        span Your hand:
         ul
           - player.hand.each do |card|
-            li
-              | #{card.rank} of #{card.suit}
+            li #{card.rank} of #{card.suit}
 
-  h3 Current Player
-  p
-    | Player ID:
-    = @game.go_fish.current_player.user_id
+      br
+      - if player.books.any?
+        span Books:
+        ul
+          - player.books.each do |book|
+            li #{book.cards.first.rank}
+      - else
+        span Books: None
 
-  h3 Deck
-  p
-    | Cards remaining in deck:
-    = @game.go_fish.deck.cards.count
+  - if @game.go_fish.current_player.user_id == current_user.id
+    form action=game_path(@game) method="patch"
+      label for="player" Choose Opponent:
+      select#player name="opponent"
+        - @game.go_fish.players.each do |player|
+          - unless player.user_id == current_user.id
+            option value="#{player.user_id}" = User.find(@game.go_fish.current_player.user_id).name
+
+      label for="rank" Choose Rank:
+      select#rank name="rank"
+        - @game.go_fish.current_player.hand.uniq(&:rank).each do |card|
+          option value="#{card.rank}" = card.rank
+
+      button.btn.btn--primary Take Turn
+
+- else
+  h2 Waiting for game to start...
+  span #{@game.users.count}/#{@game.required_player_count} Players
+  ul
+    - @game.users.each do |user|
+      li = user.name
 
 = link_to 'Back to Games', games_path
 = link_to 'Edit', edit_game_path(@game), class: 'btn btn--secondary'

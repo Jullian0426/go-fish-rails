@@ -14,6 +14,10 @@ class Game < ApplicationRecord
     users.count == required_player_count
   end
 
+  def started?
+    !go_fish.nil?
+  end
+
   def start!
     return false unless required_player_count == users.count
 
@@ -24,8 +28,9 @@ class Game < ApplicationRecord
     update(go_fish:)
   end
 
-  def play_round!
-    go_fish.play_round!
+  def play_round!(opponent_user_id, rank)
+    opponent = go_fish.players.find { |player| player.user_id == opponent_user_id }
+    go_fish.play_round!(opponent, rank)
     save!
   end
 end
