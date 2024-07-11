@@ -25,4 +25,9 @@ class Deck
   def deal
     cards.pop
   end
+
+  def self.load(deck_data)
+    cards = deck_data['cards'].map { |card_data| Card.load(card_data) }
+    Deck.new(cards)
+  end
 end

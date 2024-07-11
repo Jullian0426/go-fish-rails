@@ -11,4 +11,9 @@ class Book
   def rank
     cards.first.rank
   end
+
+  def self.load(book_data)
+    cards = book_data['cards'].map { |card_data| Card.load(card_data) }
+    Book.new(cards)
+  end
 end

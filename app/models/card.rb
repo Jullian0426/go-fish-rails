@@ -11,4 +11,14 @@ class Card
     @rank = rank
     @suit = suit
   end
+
+  def self.load(card_data)
+    rank = card_data['rank']
+    suit = card_data['suit']
+    Card.new(rank:, suit:)
+  end
+
+  def ==(other)
+    other.is_a?(Card) && rank == other.rank && suit == other.suit
+  end
 end

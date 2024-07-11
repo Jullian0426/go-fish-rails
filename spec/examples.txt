@@ -2,11 +2,18 @@ example_id                                    | status  | run_time        |
 --------------------------------------------- | ------- | --------------- |
 ./spec/helpers/game_helper_spec.rb[1:1]       | pending | 0 seconds       |
 ./spec/helpers/game_users_helper_spec.rb[1:1] | pending | 0 seconds       |
-./spec/models/game_spec.rb[1:1:1]             | passed  | 0.05379 seconds |
+./spec/models/book_spec.rb[1:1:1]             | passed  | 0.01182 seconds |
+./spec/models/card_spec.rb[1:1:1]             | passed  | 0.02281 seconds |
+./spec/models/deck_spec.rb[1:1:1]             | passed  | 0.01201 seconds |
+./spec/models/game_spec.rb[1:1:1:1]           | passed  | 0.00665 seconds |
+./spec/models/game_spec.rb[1:1:2:1]           | passed  | 0.05715 seconds |
+./spec/models/game_spec.rb[1:1:2:2]           | passed  | 0.00767 seconds |
+./spec/models/game_spec.rb[1:1:2:3]           | passed  | 0.00829 seconds |
 ./spec/models/game_user_spec.rb[1:1]          | passed  | 0.05528 seconds |
 ./spec/models/go_fish_spec.rb[1:1:1]          | passed  | 0.00103 seconds |
-./spec/models/go_fish_spec.rb[1:2:1]          | passed  | 0.00047 seconds |
-./spec/models/go_fish_spec.rb[1:2:2]          | passed  | 0.01254 seconds |
+./spec/models/go_fish_spec.rb[1:2:1:1]        | unknown |                 |
+./spec/models/go_fish_spec.rb[1:2:2:1]        | passed  | 0.0108 seconds  |
+./spec/models/player_spec.rb[1:1:1]           | passed  | 0.01133 seconds |
 ./spec/models/user_spec.rb[1:1]               | pending | 0 seconds       |
 ./spec/requests/game_spec.rb[1:1:1]           | pending | 0.00001 seconds |
 ./spec/requests/game_users_spec.rb[1:1:1]     | pending | 0 seconds       |

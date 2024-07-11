@@ -16,18 +16,24 @@ RSpec.describe GoFish, type: :model do
     end
   end
 
-  # TODO: use json_matcher to make tests more robust
   describe 'serialization' do
-    it 'dumps GoFish data as json' do
-      dump = GoFish.dump(go_fish)
-      expect(dump).not_to be_nil
+    context '#dump' do
+      it 'dumps GoFish data as json' do
+        dump = GoFish.dump(go_fish)
+        expect(dump).not_to be(Hash)
+      end
     end
 
-    it 'loads GoFish object from json' do
-      payload = go_fish.as_json
+    context '#load' do
+      it 'loads GoFish object from json' do
+        json_payload = go_fish.as_json
+        loaded_go_fish = GoFish.load(json_payload)
 
-      load = GoFish.load(payload)
-      expect(load).not_to be_nil
+        expect(loaded_go_fish).not_to be_nil
+        expect(loaded_go_fish.players.map(&:user_id)).to match_array(go_fish.players.map(&:user_id))
+        expect(loaded_go_fish.deck.cards).to match_array(go_fish.deck.cards)
+        expect(loaded_go_fish.current_player.user_id).to eq(go_fish.current_player.user_id)
+      end
     end
   end
 end
