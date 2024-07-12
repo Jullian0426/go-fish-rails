@@ -26,8 +26,8 @@ class Deck
     cards.pop
   end
 
-  def self.load(deck_data)
-    cards = deck_data['cards'].map { |card_data| Card.load(card_data) }
+  def self.from_json(deck_data)
+    cards = deck_data['cards'].map { |card_data| Card.from_json(card_data) }
     Deck.new(cards)
   end
 end

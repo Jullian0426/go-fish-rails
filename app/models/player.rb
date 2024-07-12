@@ -28,10 +28,10 @@ class Player
     User.find(user_id).name
   end
 
-  def self.load(player_data)
+  def self.from_json(player_data)
     user_id = player_data['user_id']
-    hand = player_data['hand'].map { |card_data| Card.load(card_data) }
-    books = player_data['books'].map { |book_data| Book.load(book_data) }
+    hand = player_data['hand'].map { |card_data| Card.from_json(card_data) }
+    books = player_data['books'].map { |book_data| Book.from_json(book_data) }
     Player.new(user_id:, hand:, books:)
   end
 end

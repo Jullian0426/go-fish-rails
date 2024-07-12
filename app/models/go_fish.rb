@@ -1,8 +1,6 @@
 require_relative 'deck'
 
 class GoFish
-  include ActiveModel::Serializers::JSON
-
   STARTING_HAND_SIZE = 5
 
   attr_accessor :deck, :current_player, :players, :stay_turn, :winner
@@ -43,22 +41,15 @@ class GoFish
   def self.load(payload)
     return if payload.nil?
 
-    # TODO: call from_json
-    players = payload['players'].map { |player_data| Player.load(player_data) }
-    deck = Deck.load(payload['deck'])
+    from_json(payload)
+  end
+
+  def self.from_json(payload)
+    players = payload['players'].map { |player_data| Player.from_json(player_data) }
+    deck = Deck.from_json(payload['deck'])
     current_player = players.detect { |player| player.user_id == payload['current_player']['user_id'] }
     winner = payload['winner']
     GoFish.new(players:, deck:, current_player:, winner:)
-  end
-
-  def attributes=(hash)
-    hash.each do |key, value|
-      send("#{key}=", value)
-    end
-  end
-
-  def attributes
-    instance_values
   end
 
   private

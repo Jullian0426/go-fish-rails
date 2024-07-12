@@ -12,8 +12,8 @@ class Book
     cards.first.rank
   end
 
-  def self.load(book_data)
-    cards = book_data['cards'].map { |card_data| Card.load(card_data) }
+  def self.from_json(book_data)
+    cards = book_data['cards'].map { |card_data| Card.from_json(card_data) }
     Book.new(cards)
   end
 end

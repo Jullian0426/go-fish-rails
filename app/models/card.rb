@@ -12,7 +12,7 @@ class Card
     @suit = suit
   end
 
-  def self.load(card_data)
+  def self.from_json(card_data)
     rank = card_data['rank']
     suit = card_data['suit']
     Card.new(rank:, suit:)

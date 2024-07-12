@@ -6,7 +6,7 @@ RSpec.describe Card, type: :model do
   describe '#load' do
     it 'loads Card object from json' do
       json_payload = card.as_json
-      loaded_card = Card.load(json_payload)
+      loaded_card = Card.from_json(json_payload)
 
       expect(loaded_card).not_to be_nil
       expect(loaded_card.rank).to eq(card.rank)

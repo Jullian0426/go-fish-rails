@@ -90,11 +90,11 @@ RSpec.describe 'Games', type: :system, js: true do
       end
 
       it 'displays turn form only for the current player' do
-        expect(page).to have_content('Take Turn')
+        expect(page).to have_selector("input[type=submit][value='Take Turn']")
         logout
         login_as(user2, scope: :user)
         visit game_path(game1)
-        expect(page).not_to have_content('Take Turn')
+        expect(page).not_to have_selector("input[type=submit][value='Take Turn']")
       end
     end
   end

@@ -9,7 +9,7 @@ RSpec.describe Player, type: :model do
   describe '#load' do
     it 'loads Player object from json' do
       json_payload = player.as_json
-      loaded_player = Player.load(json_payload)
+      loaded_player = Player.from_json(json_payload)
 
       expect(loaded_player).not_to be_nil
       expect(loaded_player.user_id).to eq(player.user_id)

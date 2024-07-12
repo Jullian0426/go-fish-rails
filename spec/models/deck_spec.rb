@@ -7,7 +7,7 @@ RSpec.describe Deck, type: :model do
   describe '#load' do
     it 'loads Deck object from json' do
       json_payload = deck.as_json
-      loaded_deck = Deck.load(json_payload)
+      loaded_deck = Deck.from_json(json_payload)
 
       expect(loaded_deck).not_to be_nil
       expect(loaded_deck.cards.map(&:as_json)).to match_array(deck.cards.map(&:as_json))
