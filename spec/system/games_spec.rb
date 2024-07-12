@@ -99,6 +99,7 @@ RSpec.describe 'Games', type: :system, js: true do
     end
   end
 
+  # TODO: Allow the update method to edit game or take turn
   describe 'editing a game' do
     xit 'allows editing an existing game' do
       visit edit_game_path(game1)

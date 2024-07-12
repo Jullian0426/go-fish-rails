@@ -10,7 +10,7 @@ class Deck
     @cards = cards
   end
 
-  def shuffle(seed = Random.new)
+  def shuffle!(seed = Random.new)
     cards.shuffle!(random: seed)
   end
 

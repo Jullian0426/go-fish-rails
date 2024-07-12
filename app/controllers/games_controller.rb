@@ -30,7 +30,7 @@ class GamesController < ApplicationController
   end
 
   def update
-    opponent_user_id = params[:opponent].to_i
+    opponent_user_id = params[:opponent_id].to_i
     rank = params[:rank]
 
     if @game.play_round!(opponent_user_id, rank)

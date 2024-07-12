@@ -57,4 +57,18 @@ RSpec.describe Game, type: :model do
       expect(game.go_fish).to be_an_instance_of(GoFish)
     end
   end
+
+  describe '#play_round' do
+    before do
+      create(:game_user, game:, user: user1)
+      create(:game_user, game:, user: user2)
+      game.start!
+    end
+
+    it 'finds the opponent by user_id' do
+      opponent_user_id = user2.id
+      opponent = game.go_fish.players.find { |player| player.user_id == opponent_user_id }
+      expect(opponent).to eq(game.go_fish.players.last)
+    end
+  end
 end

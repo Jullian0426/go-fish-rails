@@ -24,6 +24,10 @@ class Player
     removed_cards
   end
 
+  def name
+    User.find(user_id).name
+  end
+
   def self.load(player_data)
     user_id = player_data['user_id']
     hand = player_data['hand'].map { |card_data| Card.load(card_data) }

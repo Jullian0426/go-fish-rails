@@ -2,16 +2,16 @@ h1
   = @game.name
 
 - if @game.started?
-  p Current Player: #{User.find(@game.go_fish.current_player.user_id).name}
+  p Current Player: #{@game.go_fish.current_player.name}
 
   ul
   - @game.go_fish.players.each do |player|
     - is_current_user = player.user_id == current_user.id
     li
       - if is_current_user
-        strong = current_user.name
+        strong = player.name
       - else
-        = User.find(player.user_id).name
+        = player.name
 
       - if is_current_user
         br
@@ -30,19 +30,14 @@ h1
         span Books: None
 
   - if @game.go_fish.current_player.user_id == current_user.id
-    form action=game_path(@game) method="patch"
-      label for="player" Choose Opponent:
-      select#player name="opponent"
-        - @game.go_fish.players.each do |player|
-          - unless player.user_id == current_user.id
-            option value="#{player.user_id}" = User.find(@game.go_fish.current_player.user_id).name
+    = form_for @game, url: game_path(@game), method: :patch do |f|
+        = label_tag :opponent_id, "Player"
+        = select_tag :opponent_id, options_for_select(@game.go_fish.players.reject { |player| player.user_id == current_user.id }.map { |player| [player.name, player.user_id] })
+   
+        = label_tag :rank, "Card Rank"
+        = select_tag :rank, options_for_select(@game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| [card.rank, card.rank] })
 
-      label for="rank" Choose Rank:
-      select#rank name="rank"
-        - @game.go_fish.current_player.hand.uniq(&:rank).each do |card|
-          option value="#{card.rank}" = card.rank
-
-      button.btn.btn--primary Take Turn
+        = f.submit "Take Turn", class: "btn btn--primary"
 
 - else
   h2 Waiting for game to start...
