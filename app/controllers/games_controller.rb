@@ -30,13 +30,10 @@ class GamesController < ApplicationController
   end
 
   def update
-    opponent_user_id = params[:opponent_id].to_i
-    rank = params[:rank]
-
-    if @game.play_round!(opponent_user_id, rank)
-      redirect_to @game, notice: "You asked for a #{rank} from #{User.find(opponent_user_id).name}."
+    if @game.update(game_params)
+      redirect_to @game, notice: 'Game was successfully updated.'
     else
-      redirect_to @game, alert: "Turn failed. Please try again."
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -53,9 +50,5 @@ class GamesController < ApplicationController
 
   def game_params
     params.require(:game).permit(:name, :required_player_count)
-  end
-
-  def turn_params
-    params.require(:game).permit(:opponent, :rank)
   end
 end

@@ -30,12 +30,12 @@ h1
         span Books: None
 
   - if @game.go_fish.current_player.user_id == current_user.id
-    = form_for @game, url: game_path(@game), method: :patch do |f|
+    = form_for @game, url: game_rounds_path(@game), method: :post do |f|
         = label_tag :opponent_id, "Player"
         = select_tag :opponent_id, options_for_select(@game.go_fish.players.reject { |player| player.user_id == current_user.id }.map { |player| [player.name, player.user_id] })
-   
+
         = label_tag :rank, "Card Rank"
-        = select_tag :rank, options_for_select(@game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| [card.rank, card.rank] })
+        = select_tag :rank, options_for_select(@game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| [card.rank, card.rank] }.uniq)
 
         = f.submit "Take Turn", class: "btn btn--primary"
 

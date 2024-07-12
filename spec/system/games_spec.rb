@@ -96,12 +96,22 @@ RSpec.describe 'Games', type: :system, js: true do
         visit game_path(game1)
         expect(page).not_to have_selector("input[type=submit][value='Take Turn']")
       end
+
+      it 'runs play_round! when Take Turn button is pressed' do
+        game1.reload
+
+        expect_any_instance_of(Game).to receive(:play_round!).with(user2.id, game1.go_fish.current_player.hand.first.rank)
+
+        expect(page).to have_selector("input[type=submit][value='Take Turn']")
+        select user2.name, from: 'opponent_id'
+        select game1.go_fish.current_player.hand.first.rank, from: 'rank'
+        click_button 'Take Turn'
+      end
     end
   end
 
-  # TODO: Allow the update method to edit game or take turn
   describe 'editing a game' do
-    xit 'allows editing an existing game' do
+    it 'allows editing an existing game' do
       visit edit_game_path(game1)
 
       find_field('Name').set("Edited #{game1.name}")
