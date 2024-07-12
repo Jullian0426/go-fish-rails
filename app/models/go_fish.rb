@@ -3,14 +3,15 @@ require_relative 'deck'
 class GoFish
   STARTING_HAND_SIZE = 5
 
-  attr_accessor :deck, :current_player, :players, :stay_turn, :winner
+  attr_accessor :deck, :current_player, :players, :stay_turn, :winner, :round_results
 
-  def initialize(players:, deck: Deck.new, current_player: players.first, winner: nil)
+  def initialize(players:, deck: Deck.new, current_player: players.first, winner: nil, round_results: [])
     @players = players
     @deck = deck
     @current_player = current_player
     @stay_turn = false
     @winner = winner
+    @round_results = round_results
   end
 
   def deal!
@@ -49,7 +50,8 @@ class GoFish
     deck = Deck.from_json(payload['deck'])
     current_player = players.detect { |player| player.user_id == payload['current_player']['user_id'] }
     winner = payload['winner']
-    GoFish.new(players:, deck:, current_player:, winner:)
+    round_results = payload['round_results']&.map { |round_result_data| RoundResult.from_json(round_result_data) }
+    GoFish.new(players:, deck:, current_player:, winner:, round_results:)
   end
 
   private
@@ -68,6 +70,7 @@ class GoFish
 
   def finalize_turn
     create_book_if_possible(current_player)
+    round_results << RoundResult.new('test')
     next_player unless stay_turn
     game_over
     # TODO: deal cards to players with empty hands

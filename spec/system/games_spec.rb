@@ -14,6 +14,12 @@ RSpec.describe 'Games', type: :system, js: true do
     end
   end
 
+  def take_turn
+    select user2.name, from: 'opponent_id'
+    select game1.go_fish.current_player.hand.first.rank, from: 'rank'
+    click_button 'Take Turn'
+  end
+
   before do
     login_as(user1, scope: :user)
     visit games_path
@@ -97,15 +103,27 @@ RSpec.describe 'Games', type: :system, js: true do
         expect(page).not_to have_selector("input[type=submit][value='Take Turn']")
       end
 
-      it 'runs play_round! when Take Turn button is pressed' do
-        game1.reload
+      context 'when playing a round' do
+        it 'runs play_round! when Take Turn button is pressed' do
+          expect_any_instance_of(Game).to receive(:play_round!).with(user2.id,
+                                                                     game1.go_fish.current_player.hand.first.rank)
 
-        expect_any_instance_of(Game).to receive(:play_round!).with(user2.id, game1.go_fish.current_player.hand.first.rank)
+          expect(page).to have_selector("input[type=submit][value='Take Turn']")
+          take_turn
+        end
 
-        expect(page).to have_selector("input[type=submit][value='Take Turn']")
-        select user2.name, from: 'opponent_id'
-        select game1.go_fish.current_player.hand.first.rank, from: 'rank'
-        click_button 'Take Turn'
+        it "increases number of cards in user1's hand" do
+          take_turn
+          expect(page).to have_content('You asked for')
+          expect(game1.reload.go_fish.players.first.hand.size).to be > GoFish::STARTING_HAND_SIZE
+        end
+
+        it 'displays round result message', :chrome do
+          expect(game1.reload.go_fish.round_results.last).to be_nil
+          take_turn
+          expect(game1.reload.go_fish.round_results.last).not_to be_nil
+          expect(page).to have_content(game1.reload.go_fish.round_results.last)
+        end
       end
     end
   end
