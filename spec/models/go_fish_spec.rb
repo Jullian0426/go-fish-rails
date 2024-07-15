@@ -1,8 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe GoFish, type: :model do
-  let(:player1) { Player.new(user_id: 1) }
-  let(:player2) { Player.new(user_id: 2) }
+  let(:user1) { create(:user) }
+  let(:user2) { create(:user) }
+  let(:player1) { Player.new(user_id: user1.id) }
+  let(:player2) { Player.new(user_id: user2.id) }
   let(:players) { [player1, player2] }
 
   let(:go_fish) { GoFish.new(players:) }
@@ -71,7 +73,13 @@ RSpec.describe GoFish, type: :model do
         expect(player1.hand).to include(card1, card5, card7)
       end
 
-      it 'returns the winner when a go_fish is over' do
+      it 'saves round result data' do
+        expect(go_fish.round_result).to be_empty
+        go_fish.play_round!(player2, '3')
+        expect(go_fish.round_result).not_to be_empty
+      end
+
+      it 'sets the winner when a go_fish is over' do
         player1.hand = [card1, card5, card6]
         player2.hand = [card7]
         go_fish.deck.cards.clear
@@ -89,15 +97,21 @@ RSpec.describe GoFish, type: :model do
       end
     end
 
+    before do
+      go_fish.deal!
+      go_fish.play_round!(player2, player1.hand.first.rank)
+    end
+
     context '#load' do
       it 'loads GoFish object from json' do
-        json_payload = go_fish.as_json
+        json_payload = GoFish.dump(go_fish)
         loaded_go_fish = GoFish.load(json_payload)
 
         expect(loaded_go_fish).not_to be_nil
         expect(loaded_go_fish.players.map(&:user_id)).to match_array(go_fish.players.map(&:user_id))
         expect(loaded_go_fish.deck.cards).to match_array(go_fish.deck.cards)
         expect(loaded_go_fish.current_player.user_id).to eq(go_fish.current_player.user_id)
+        expect(loaded_go_fish.round_result.last.messages['player']['action']).to match(go_fish.round_result.last.messages['player']['action'])
       end
     end
   end

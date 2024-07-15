@@ -118,11 +118,15 @@ RSpec.describe 'Games', type: :system, js: true do
           expect(game1.reload.go_fish.players.first.hand.size).to be > GoFish::STARTING_HAND_SIZE
         end
 
-        it 'displays round result message', :chrome do
-          expect(game1.reload.go_fish.round_results.last).to be_nil
+        it 'displays round result message' do
+          expect(game1.reload.go_fish.round_result).to be_empty
           take_turn
-          expect(game1.reload.go_fish.round_results.last).not_to be_nil
-          expect(page).to have_content(game1.reload.go_fish.round_results.last)
+
+          game1.reload
+          binding.irb
+          action = game1.go_fish.round_result.last[:player][:action]
+          expect(page).to have_content(action)
+          expect(action).not_to be_nil
         end
       end
     end

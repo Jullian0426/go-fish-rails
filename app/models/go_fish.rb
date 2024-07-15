@@ -3,15 +3,16 @@ require_relative 'deck'
 class GoFish
   STARTING_HAND_SIZE = 5
 
-  attr_accessor :deck, :current_player, :players, :stay_turn, :winner, :round_results
+  attr_accessor :deck, :current_player, :players, :stay_turn, :winner, :round_result, :card_drawn
 
-  def initialize(players:, deck: Deck.new, current_player: players.first, winner: nil, round_results: [])
+  def initialize(players:, deck: Deck.new, current_player: players.first, winner: nil, round_result: [])
     @players = players
     @deck = deck
     @current_player = current_player
     @stay_turn = false
     @winner = winner
-    @round_results = round_results
+    @round_result = round_result
+    @card_drawn = nil
   end
 
   def deal!
@@ -32,7 +33,7 @@ class GoFish
     else
       go_fish(rank)
     end
-    finalize_turn
+    finalize_turn(opponent, rank)
   end
 
   def self.dump(object)
@@ -50,8 +51,8 @@ class GoFish
     deck = Deck.from_json(payload['deck'])
     current_player = players.detect { |player| player.user_id == payload['current_player']['user_id'] }
     winner = payload['winner']
-    round_results = payload['round_results']&.map { |round_result_data| RoundResult.from_json(round_result_data) }
-    GoFish.new(players:, deck:, current_player:, winner:, round_results:)
+    round_result = payload['round_result']&.map { |round_result_data| RoundResult.from_json(round_result_data) }
+    GoFish.new(players:, deck:, current_player:, winner:, round_result:)
   end
 
   private
@@ -63,14 +64,14 @@ class GoFish
   end
 
   def go_fish(rank)
-    drawn_card = deck.deal
-    current_player.add_to_hand([drawn_card])
-    self.stay_turn = drawn_card.rank == rank
+    self.card_drawn = deck.deal
+    current_player.add_to_hand([card_drawn])
+    self.stay_turn = card_drawn.rank == rank
   end
 
-  def finalize_turn
-    create_book_if_possible(current_player)
-    round_results << RoundResult.new('test')
+  def finalize_turn(opponent, rank)
+    book_rank = create_book_if_possible(current_player)
+    create_results(opponent, rank, book_rank)
     next_player unless stay_turn
     game_over
     # TODO: deal cards to players with empty hands
@@ -79,11 +80,16 @@ class GoFish
   def create_book_if_possible(player)
     ranks = player.hand.map(&:rank)
     book_rank = ranks.find { |rank| ranks.count(rank) == 4 }
-    return unless book_rank
+    return nil unless book_rank
 
     book_cards = player.remove_by_rank(book_rank)
     new_book = Book.new(book_cards)
     player.books << new_book
+    new_book.cards.first.rank
+  end
+
+  def create_results(opponent, rank, book_rank = nil)
+    round_result << RoundResult.new(current_player_name: current_player.name, opponent_name: opponent.name, rank:, card_drawn:, book_rank:)
   end
 
   def game_over
