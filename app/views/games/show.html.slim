@@ -39,14 +39,22 @@ h1
 
       = f.submit "Take Turn", class: "btn btn--primary"
 
-  - if @game.go_fish.round_result.any?
-    - @game.go_fish.round_result.each do |round_result|
-      - player_messages = round_result.messages['player']
-      p #{player_messages['action']}
-      p #{player_messages['response']}
-      p #{player_messages['feedback']}
-      - unless player_messages['book'].nil?
-        p #{player_messages['book']}
+  - if @game.go_fish.round_results.any?
+    - @game.go_fish.round_results.each do |round_result|
+      - if current_user.id == round_result.current_player.user_id
+        - context = :player
+      - elsif current_user.id == round_result.opponent.user_id
+        - context = :opponent
+      - else
+        - context = :others
+
+      - messages = round_result.messages_for(context)
+
+      p= messages['action']
+      p= messages['response']
+      p= messages['feedback']
+      - unless messages['book'].nil?
+        p= messages['book']
 
 - else
   h2 Waiting for game to start...

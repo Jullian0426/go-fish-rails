@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class RoundMessages
-  attr_reader :current_player_name, :opponent_name, :rank, :card_drawn, :book_rank
+class RoundMessage
+  attr_accessor :current_player, :opponent, :rank, :card_drawn, :book_rank
 
-  def initialize(current_player_name:, opponent_name:, rank:, card_drawn:, book_rank:)
-    @current_player_name = current_player_name
-    @opponent_name = opponent_name
+  def initialize(current_player:, opponent:, rank:, card_drawn:, book_rank:)
+    @current_player = current_player
+    @opponent = opponent
     @rank = rank
     @card_drawn = card_drawn
     @book_rank = book_rank
@@ -41,27 +41,27 @@ class RoundMessages
   private
 
   def player_action_message
-    "You asked #{opponent_name} for #{rank}s"
+    "You asked #{opponent.name} for #{rank}s"
   end
 
   def player_response_message
     if card_drawn.nil?
-      "#{opponent_name} had the #{rank}s"
+      "#{opponent.name} had the #{rank}s"
     else
-      "Go Fish: #{opponent_name} doesn't have any #{rank}s"
+      "Go Fish: #{opponent.name} doesn't have any #{rank}s"
     end
   end
 
   def player_feedback_message
     if card_drawn
-      "You drew a #{card_drawn.rank}"
+      "You drew a #{card_drawn.rank} of #{card_drawn.suit}"
     else
-      "You took the cards from #{opponent_name}"
+      "You took the cards from #{opponent.name}"
     end
   end
 
   def opponent_action_message
-    "#{current_player_name} asked you for #{rank}s"
+    "#{current_player.name} asked you for #{rank}s"
   end
 
   def opponent_response_message
@@ -74,29 +74,29 @@ class RoundMessages
 
   def opponent_feedback_message
     if card_drawn
-      "#{current_player_name} drew a #{card_drawn.rank}"
+      "#{current_player.name} drew a card"
     else
-      "#{current_player_name} took the cards from you."
+      "#{current_player.name} took the cards from you"
     end
   end
 
   def others_action_message
-    "#{current_player_name} asked #{opponent_name} for #{rank}s"
+    "#{current_player.name} asked #{opponent.name} for #{rank}s"
   end
 
   def others_response_message
     if card_drawn.nil?
-      "#{opponent_name} had the #{rank}s"
+      "#{opponent.name} had the #{rank}s"
     else
-      "Go Fish: #{opponent_name} doesn't have any #{rank}s"
+      "Go Fish: #{opponent.name} doesn't have any #{rank}s"
     end
   end
 
   def others_feedback_message
     if card_drawn
-      "#{current_player_name} drew a #{card_drawn.rank}"
+      "#{current_player.name} drew a card"
     else
-      "#{current_player_name} took the cards from #{opponent_name}"
+      "#{current_player.name} took the cards from #{opponent.name}"
     end
   end
 
@@ -106,7 +106,7 @@ class RoundMessages
     name = if for_player
              'You'
            else
-             current_player_name
+             current_player.name
            end
 
     "#{name} made a book of #{book_rank}s"

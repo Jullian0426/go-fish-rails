@@ -74,9 +74,9 @@ RSpec.describe GoFish, type: :model do
       end
 
       it 'saves round result data' do
-        expect(go_fish.round_result).to be_empty
+        expect(go_fish.round_results).to be_empty
         go_fish.play_round!(player2, '3')
-        expect(go_fish.round_result).not_to be_empty
+        expect(go_fish.round_results).not_to be_empty
       end
 
       it 'sets the winner when a go_fish is over' do
@@ -111,7 +111,7 @@ RSpec.describe GoFish, type: :model do
         expect(loaded_go_fish.players.map(&:user_id)).to match_array(go_fish.players.map(&:user_id))
         expect(loaded_go_fish.deck.cards).to match_array(go_fish.deck.cards)
         expect(loaded_go_fish.current_player.user_id).to eq(go_fish.current_player.user_id)
-        expect(loaded_go_fish.round_result.last.messages['player']['action']).to match(go_fish.round_result.last.messages['player']['action'])
+        expect(loaded_go_fish.round_results.last.messages_for(:player)).to match(go_fish.round_results.last.messages_for(:player))
       end
     end
   end

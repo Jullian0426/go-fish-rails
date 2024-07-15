@@ -3,15 +3,15 @@ require_relative 'deck'
 class GoFish
   STARTING_HAND_SIZE = 5
 
-  attr_accessor :deck, :current_player, :players, :stay_turn, :winner, :round_result, :card_drawn
+  attr_accessor :deck, :current_player, :players, :stay_turn, :winner, :round_results, :card_drawn
 
-  def initialize(players:, deck: Deck.new, current_player: players.first, winner: nil, round_result: [])
+  def initialize(players:, deck: Deck.new, current_player: players.first, winner: nil, round_results: [])
     @players = players
     @deck = deck
     @current_player = current_player
     @stay_turn = false
     @winner = winner
-    @round_result = round_result
+    @round_results = round_results
     @card_drawn = nil
   end
 
@@ -51,8 +51,8 @@ class GoFish
     deck = Deck.from_json(payload['deck'])
     current_player = players.detect { |player| player.user_id == payload['current_player']['user_id'] }
     winner = payload['winner']
-    round_result = payload['round_result']&.map { |round_result_data| RoundResult.from_json(round_result_data) }
-    GoFish.new(players:, deck:, current_player:, winner:, round_result:)
+    round_results = payload['round_results']&.map { |round_result_data| RoundResult.from_json(round_result_data) }
+    GoFish.new(players:, deck:, current_player:, winner:, round_results:)
   end
 
   private
@@ -89,7 +89,7 @@ class GoFish
   end
 
   def create_results(opponent, rank, book_rank = nil)
-    round_result << RoundResult.new(current_player_name: current_player.name, opponent_name: opponent.name, rank:, card_drawn:, book_rank:)
+    round_results << RoundResult.new(current_player:, opponent:, rank:, card_drawn:, book_rank:)
   end
 
   def game_over

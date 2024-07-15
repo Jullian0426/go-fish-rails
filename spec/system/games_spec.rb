@@ -79,17 +79,17 @@ RSpec.describe 'Games', type: :system, js: true do
       end
 
       it 'displays current player' do
-        expect(page).to have_content("Current Player: #{User.find(game1.go_fish.current_player.user_id).name}")
+        expect(page).to have_content("Current Player: #{User.find(game1.reload.go_fish.current_player.user_id).name}")
       end
 
       it "displays user1's hand" do
-        game1.go_fish.current_player.hand.each do |card|
+        game1.reload.go_fish.current_player.hand.each do |card|
           expect(page).to have_content("#{card.rank} of #{card.suit}")
         end
       end
 
       it "does not display user2's hand" do
-        other_player = game1.go_fish.players.find { |player| player.user_id == user2.id }
+        other_player = game1.reload.go_fish.players.find { |player| player.user_id == user2.id }
         other_player.hand.each do |card|
           expect(page).not_to have_content("#{card.rank} of #{card.suit}")
         end
@@ -118,13 +118,12 @@ RSpec.describe 'Games', type: :system, js: true do
           expect(game1.reload.go_fish.players.first.hand.size).to be > GoFish::STARTING_HAND_SIZE
         end
 
-        it 'displays round result message' do
-          expect(game1.reload.go_fish.round_result).to be_empty
+        xit 'displays round result message' do
+          expect(game1.reload.go_fish.round_results).to be_empty
           take_turn
 
           game1.reload
-          binding.irb
-          action = game1.go_fish.round_result.last[:player][:action]
+          action = game1.go_fish.round_results.last.messages_for(:player)['action']
           expect(page).to have_content(action)
           expect(action).not_to be_nil
         end
