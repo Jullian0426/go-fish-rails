@@ -1,0 +1,36 @@
+.card-tray {
+  padding: var(--op-space-medium);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--op-space-medium);
+  overflow: auto;
+
+  // Modifiers
+  .card-tray--border-top {
+    border-top: var(--op-border-width) solid var(--op-color-border);
+  }
+}
+
+.card-row {
+  display: flex;
+  overflow: auto;
+
+  // Children
+  >*:not(:first-child) {
+    margin-left: calc(-1 * var(--op-space-2x-large));
+  }
+
+  // Modifiers
+  &.card-row--accordion {
+    height: calc(30 * var(--op-size-unit));
+  }
+
+  &.card-row--accordion-books {
+    height: calc(22 * var(--op-size-unit));
+    max-width: calc(60 * var(--op-size-unit));
+  }
+
+  &.card-row--your-books {
+    height: calc(30 * var(--op-size-unit));
+  }
+}

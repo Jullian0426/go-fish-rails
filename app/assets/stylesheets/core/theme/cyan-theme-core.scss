@@ -1,0 +1,9 @@
+@mixin color-varieties {
+  --op-color-primary-h: 180deg;
+  --op-color-primary-s: 50%;
+  --op-color-primary-l: 50%;
+}
+
+:root[data-theme='cyan'] {
+  @include color-varieties;
+}

@@ -1,0 +1,30 @@
+// Layout
+.game-view {
+  display: grid;
+  grid-template-columns: 1fr calc(84 * var(--op-size-unit));
+  grid-template-rows: 1fr calc(56 * var(--op-size-unit));
+  height: 100vh;
+  overflow: auto;
+}
+
+.board-view {
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.feed-view {
+  grid-area: 1 / 2 / 2 / 3;
+  background-color: var(--op-color-primary-plus-eight);
+  color: var(--op-color-primary-on-plus-eight-alt);
+}
+
+.hand-view {
+  grid-area: 2 / 1 / 3 / 2;
+  background-color: var(--op-color-neutral-plus-seven);
+  color: var(--op-color-neutral-on-plus-seven-alt);
+}
+
+.book-view {
+  grid-area: 2 / 2 / 3 / 3;
+  background-color: var(--op-color-neutral-plus-seven);
+  color: var(--op-color-neutral-on-plus-seven-alt);
+}

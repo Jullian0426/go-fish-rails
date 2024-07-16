@@ -1,0 +1,15 @@
+.action-choices {
+  padding: var(--op-space-small);
+  border-radius: var(--op-radius-x-large);
+  border: var(--op-border-width) solid var(--op-color-primary-plus-six);
+  background-color: var(--op-color-primary-plus-seven);
+  color: var(--op-color-primary-on-plus-seven);
+  display: flex;
+  flex-direction: column;
+
+  // Children
+  .action-choices__input-collection {
+    display: flex;
+    gap: var(--op-space-small);
+  }
+}

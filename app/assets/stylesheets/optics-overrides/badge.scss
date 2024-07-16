@@ -1,0 +1,5 @@
+%badge-global {
+  &.badge--with-border {
+    box-shadow: var(--op-input-outer-focus) var(--op-color-neutral-plus-max);
+  }
+}

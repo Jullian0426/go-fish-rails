@@ -1,0 +1,41 @@
+// Children
+.notification {
+  --_notification-border-color: var(---op-color-primary-plus-five);
+
+  border-radius: var(--op-radius-x-large);
+  border: var(--op-border-width) solid var(--_notification-border-color);
+  background-color: var(--op-color-primary-plus-five);
+  color: var(--op-color-primary-on-plus-five-alt);
+  padding: var(--op-space-small);
+  font-size: var(--op-font-small);
+
+  // Modifiers
+  &.notification--question {
+    font-size: var(--op-font-medium);
+  }
+
+  &.notification--response {
+    --_notification-border-color: var(--op-color-alerts-warning-plus-five);
+    background-color: var(--op-color-alerts-warning-plus-seven);
+    color: var(--op-color-alerts-warning-on-plus-seven-alt);
+  }
+
+  &.notification--action {
+    --_notification-border-color: var(--op-color-primary-plus-seven);
+    background-color: var(--op-color-primary-plus-max);
+    color: var(--op-color-primary-on-plus-max);
+  }
+}
+
+.notification-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  overflow: auto;
+  gap: var(--op-space-small);
+
+  .notification-feed__reply {
+    display: flex;
+    align-items: center;
+  }
+}
