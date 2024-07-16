@@ -10,7 +10,7 @@
   font-size: var(--op-font-small);
 
   // Modifiers
-  &.notification--question {
+  &.notification--action {
     font-size: var(--op-font-medium);
   }
 
@@ -20,7 +20,7 @@
     color: var(--op-color-alerts-warning-on-plus-seven-alt);
   }
 
-  &.notification--action {
+  &.notification--feedback {
     --_notification-border-color: var(--op-color-primary-plus-seven);
     background-color: var(--op-color-primary-plus-max);
     color: var(--op-color-primary-on-plus-max);

@@ -1,69 +1,104 @@
-h1
-  = @game.name
-
 - if @game.started?
-  p Current Player: #{@game.go_fish.current_player.name}
+  main.game-view
+    section.gf-panel.gf-panel--large-header-row.board-view
+      .gf-panel__panel-header.gf-panel__panel-header--large
+        = link_to games_path do
+          span.material-symbols-outlined.icon--x-large.icon--weight-bold arrow_back
+        span.gf-emphasis = @game.name
+      .gf-panel__panel-body.gf-panel__panel-body--players
+        span.gf-emphasis Players:
+        .accordion-group
+          - @game.go_fish.players.each do |player|
+            details.accordion
+              summary
+                span.material-symbols-outlined.accordion__marker arrow_right
+                .flex.justify-between
+                  - if player.user_id == current_user.id
+                    span.gf-emphasis = player.name
+                  - else
+                    span = player.name
 
-  ul
-  - @game.go_fish.players.each do |player|
-    - is_current_user = player.user_id == current_user.id
-    li
-      - if is_current_user
-        strong = player.name
-      - else
-        = player.name
+                  .flex.gap-xl
+                    span
+                      |> Cards:
+                      span.gf-emphasis = player.hand.size
+                    span
+                      |> Books:
+                      span.gf-emphasis = player.books.size
 
-      - if is_current_user
-        br
-        span Your hand:
-        ul
+              .card-tray.card-tray--border-top
+                .card-row.card-row--accordion
+                  - if player.user_id == current_user.id
+                    - player.hand.each do |card|
+                      = image_tag "#{card.rank.downcase}-#{card.suit.downcase}.svg", alt: "Playing Card"
+                  - else
+                    - player.hand.each do |card|
+                      = image_tag "back-card.svg", alt: "Playing Card"
+                .card-row.card-row--accordion-books
+                  - player.books.each do |book|
+                    - book.cards.each do |card|
+                      = image_tag "#{card.rank.downcase}-#{card.suit.downcase}.svg", alt: "Playing Card"
+
+
+    section.gf-panel.gf-panel--large-header-row.feed-view
+      .gf-panel__panel-header.justify-between
+        span.gf-emphasis Game Feed
+        .badge-primary.badge--with-border #{@game.go_fish.current_player.name}'s Turn
+      .gf-panel__panel-body.gf-panel__panel-body--feed
+        .notification-feed
+          - if @game.go_fish.round_results.any?
+            - @game.go_fish.round_results.each do |round_result|
+              - if current_user.id == round_result.current_player.user_id
+                - context = :player
+              - elsif current_user.id == round_result.opponent.user_id
+                - context = :opponent
+              - else
+                - context = :others
+
+              - messages = round_result.messages_for(context)
+
+
+              .notification.notification--action
+                span = messages['action']
+              .notification-feed__reply
+                span.material-symbols-outlined.icon--x-large.icon--weight-semi-bold subdirectory_arrow_right
+                .notification.notification--response
+                  span.gf-emphasis = messages['response']
+              .notification-feed__reply
+                span.material-symbols-outlined.icon--x-large.icon--weight-semi-bold subdirectory_arrow_right
+                .notification.notification--feedback
+                  span.gf-emphasis = messages['feedback']
+
+        = form_for @game, url: game_rounds_path(@game), method: :post, html: { class: "action-choices" } do |f|
+          .action-choices__input-collection
+            .form-group.flex-grow-1
+              = label_tag :opponent_id, "Player", class: "form-label"
+              = select_tag :opponent_id, options_for_select(@game.go_fish.players.reject { |player| player.user_id == current_user.id }.map { |player| [player.name, player.user_id] }), class: "form-control form-control--small"
+
+            .form-group.flex-grow-1
+              = label_tag :rank, "Card Rank", class: "form-label"
+              = select_tag :rank, options_for_select(@game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| [card.rank, card.rank] }.uniq), class: "form-control form-control--small"
+
+          - if @game.go_fish.current_player.user_id == current_user.id
+            = f.submit "Ask", class: "btn-primary btn--light"
+          - else
+            = f.submit "Ask", class: "btn-primary btn--light", disabled: true
+
+    - player = @game.go_fish.players.find { |player| player.user_id == current_user.id }
+    section.gf-panel.hand-view
+      .gf-panel__panel-header
+        span.gf-emphasis Your Hand
+      .card-tray
+        .card-row
+          - player = @game.go_fish.players.find { |player| player.user_id == current_user.id }
           - player.hand.each do |card|
-            li #{card.rank} of #{card.suit}
+                = image_tag "#{card.rank.downcase}-#{card.suit.downcase}.svg", alt: "Playing Card"
 
-      br
-      - if player.books.any?
-        span Books:
-        ul
+    section.gf-panel.book-view
+      .gf-panel__panel-header
+        span.gf-emphasis Your Books
+      .card-tray
+        .card-row.card-row--your-books
           - player.books.each do |book|
-            li #{book.cards.first.rank}
-      - else
-        span Books: None
-
-  - if @game.go_fish.current_player.user_id == current_user.id
-    = form_for @game, url: game_rounds_path(@game), method: :post do |f|
-      = label_tag :opponent_id, "Player"
-      = select_tag :opponent_id, options_for_select(@game.go_fish.players.reject { |player| player.user_id == current_user.id }.map { |player| [player.name, player.user_id] })
-
-      = label_tag :rank, "Card Rank"
-      = select_tag :rank, options_for_select(@game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| [card.rank, card.rank] }.uniq)
-
-      = f.submit "Take Turn", class: "btn btn--primary"
-
-  - if @game.go_fish.round_results.any?
-    - @game.go_fish.round_results.each do |round_result|
-      - if current_user.id == round_result.current_player.user_id
-        - context = :player
-      - elsif current_user.id == round_result.opponent.user_id
-        - context = :opponent
-      - else
-        - context = :others
-
-      - messages = round_result.messages_for(context)
-
-      p= messages['action']
-      p= messages['response']
-      p= messages['feedback']
-      - unless messages['book'].nil?
-        p= messages['book']
-
-- else
-  h2 Waiting for game to start...
-  span #{@game.users.count}/#{@game.required_player_count} Players
-  ul
-    - @game.users.each do |user|
-      li = user.name
-
-= link_to 'Back to Games', games_path
-= link_to 'Edit', edit_game_path(@game), class: 'btn btn--secondary'
-= button_to 'Delete', game_path(@game), method: :delete, class: 'btn btn--danger'
-= button_to 'Leave Game', game_game_user_path(@game), method: :delete, data: { confirm: 'Are you sure you want to leave this game?' }, class: 'btn btn--danger'
+            - book.cards.each do |card|
+              = image_tag "#{card.rank.downcase}-#{card.suit.downcase}.svg", alt: "Playing Card"
