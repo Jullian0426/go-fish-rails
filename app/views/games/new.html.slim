@@ -1,3 +1,4 @@
 h1 New Game
 
-= render "form", editing: false
+= turbo_frame_tag @game
+  = render "form", editing: false

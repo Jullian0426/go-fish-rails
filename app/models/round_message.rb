@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: look into using a data object
 class RoundMessage
   attr_accessor :current_player, :opponent, :rank, :card_drawn, :book_rank
 

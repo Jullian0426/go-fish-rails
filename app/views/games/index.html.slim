@@ -1,23 +1,21 @@
-h1 Your Games
+= turbo_stream_from current_user, "games"
 
-- if current_user.games.present?
-  ul
-    - current_user.games.each do |game|
-      li
-        => link_to game.name, game_path(game)
-        span #{game.users.count}/#{game.required_player_count} Players
-- else
-  p You have not joined any games yet.
+h1 Your Games
+ul
+  - if current_user.games.present?
+    = turbo_frame_tag "your_games"
+      - current_user.games.each do |game|
+        = render "game", game: game
+  - else
+    p You have not joined any games yet.
+
+
+= link_to 'Create New Game', new_game_path, class: 'btn btn--primary', data: { turbo_frame: dom_id(Game.new) }
+= turbo_frame_tag Game.new
 
 
 h1 All Games
-
-= link_to 'Create New Game', new_game_path, class: 'btn btn--primary'
-
 ul
-  - @games.each do |game|
-    li
-      span> #{game.name}
-      span #{game.users.count}/#{game.required_player_count} Players
-      - unless current_user.games.include?(game)
-        = button_to 'Join Game', game_game_users_path(game), method: :post, class: 'btn btn--primary'
+  = turbo_frame_tag "all_games"
+    - @games.each do |game|
+      = render "game", game: game

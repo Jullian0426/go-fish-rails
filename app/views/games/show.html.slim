@@ -80,9 +80,9 @@
               = select_tag :rank, options_for_select(@game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| [card.rank, card.rank] }.uniq), class: "form-control form-control--small"
 
           - if @game.go_fish.current_player.user_id == current_user.id
-            = f.submit "Ask", class: "btn-primary btn--light"
+            = f.submit "Ask for Cards", class: "btn-primary"
           - else
-            = f.submit "Ask", class: "btn-primary btn--light", disabled: true
+            = f.submit "Ask for Cards", class: "btn-primary", disabled: true
 
     - player = @game.go_fish.players.find { |player| player.user_id == current_user.id }
     section.gf-panel.hand-view

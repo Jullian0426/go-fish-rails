@@ -1,5 +1,5 @@
 doctype html
-html lang="en" data-theme-mode="light" data-theme="cyan"
+html lang="en" data-theme-mode="dark" data-theme="cyan"
   head
     title Go Fish Rails
     = csrf_meta_tags
@@ -8,8 +8,9 @@ html lang="en" data-theme-mode="light" data-theme="cyan"
     = javascript_include_tag 'application', 'data-turbo-track': 'reload', defer: true
     meta content="width=device-width, initial-scale=1" name="viewport"
   body.app-body
+    #flash
+      = render 'layouts/flash'
     = turbo_frame_tag 'modal'
     = turbo_frame_tag 'panel'
     = render 'confirm'
-    = render 'layouts/flash'
     = yield

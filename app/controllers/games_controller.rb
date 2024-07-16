@@ -3,7 +3,7 @@ class GamesController < ApplicationController
   before_action :set_game, only: [:show, :edit, :update, :destroy]
 
   def index
-    @games = Game.all
+    @games = Game.order(created_at: :desc)
   end
 
   def show
@@ -23,7 +23,10 @@ class GamesController < ApplicationController
 
     if @game.save
       @game.users << current_user
-      redirect_to @game, notice: 'Game was successfully created.'
+      respond_to do |format|
+        format.html { redirect_to @game, notice: 'Game was successfully created.' }
+        format.turbo_stream { flash.now[:notice] = 'Game was successfully created.' }
+      end
     else
       render :new, status: :unprocessable_entity
     end

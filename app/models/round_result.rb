@@ -20,6 +20,7 @@ class RoundResult
     RoundResult.new(current_player:, opponent:, rank:, card_drawn:, book_rank:)
   end
 
+  # TODO: messages.send("#{context}_messages")
   def messages_for(context)
     round_message = RoundMessage.new(current_player:, opponent:, rank:, card_drawn:, book_rank:)
 
