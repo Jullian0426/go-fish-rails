@@ -7,7 +7,7 @@ class RoundsController < ApplicationController
     rank = round_params[:rank]
 
     if @game.play_round!(opponent_user_id, rank)
-      redirect_to @game, notice: "You asked for a #{rank} from #{User.find(opponent_user_id).name}."
+      redirect_to @game
     else
       redirect_to @game, alert: "Turn failed. Please try again."
     end

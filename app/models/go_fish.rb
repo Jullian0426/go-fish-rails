@@ -92,6 +92,7 @@ class GoFish
     round_results << RoundResult.new(current_player:, opponent:, rank:, card_drawn:, book_rank:)
   end
 
+  # TODO: make game over message
   def game_over
     return unless deck.cards.empty? && players.all? { |player| player.hand.empty? }
 

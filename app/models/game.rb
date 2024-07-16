@@ -10,6 +10,12 @@ class Game < ApplicationRecord
 
   serialize :go_fish, coder: GoFish
 
+  after_update_commit lambda {
+    users.each do |user|
+      broadcast_replace_to "#{user.id}_#{id}", locals: { game: self, current_user: user }
+    end
+  }
+
   def enough_players?
     users.count == required_player_count
   end

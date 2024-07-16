@@ -1,4 +1,4 @@
-= turbo_stream.prepend "your_games", @game
-= turbo_stream.prepend "all_games", @game
+= turbo_stream.prepend "your_games", partial: "game_info", locals: { game: @game }
+= turbo_stream.prepend "all_games", partial: "game_info", locals: { game: @game }
 = turbo_stream.update Game.new, ""
 = render_turbo_stream_flash_messages

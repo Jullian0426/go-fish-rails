@@ -1,0 +1,8 @@
+= turbo_frame_tag game
+  li
+    span> #{game.name}
+    span #{game.users.count}/#{game.required_player_count} Players
+    - if current_user.games.include?(game)
+      = link_to "Play Now", game_path(game), data: { turbo_frame: "_top" }, class: 'btn btn-primary'
+    - else
+      = button_to 'Join Game', game_game_users_path(game), method: :post, class: 'btn btn--primary', data: { turbo_frame: "_top" }
