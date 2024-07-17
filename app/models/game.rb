@@ -12,7 +12,7 @@ class Game < ApplicationRecord
 
   after_update_commit lambda {
     users.each do |user|
-      broadcast_replace_to "#{user.id}_#{id}", locals: { game: self, current_user: user }
+      broadcast_refresh_to "#{user.id}_#{id}"
     end
   }
 

@@ -133,6 +133,7 @@ RSpec.describe 'Games', type: :system, js: true do
             take_turn(game1)
           end
 
+          # TODO: fix this test
           xit 'broadcasts when another user takes their turn' do
             expect(page).to have_content("#{user1.name}'s Turn")
             take_turn(game1)
