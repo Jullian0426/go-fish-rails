@@ -76,6 +76,11 @@
                 span.material-symbols-outlined.icon--x-large.icon--weight-semi-bold subdirectory_arrow_right
                 .notification.notification--feedback
                   span.gf-emphasis = messages['feedback']
+              - if messages['book']
+                .notification-feed__reply
+                  span.material-symbols-outlined.icon--x-large.icon--weight-semi-bold subdirectory_arrow_right
+                  .notification.notification--feedback
+                    span.gf-emphasis = messages['book']
 
           = form_for game, url: game_rounds_path(game), method: :post, html: { class: "action-choices" } do |f|
             .action-choices__input-collection

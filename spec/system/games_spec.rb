@@ -147,7 +147,6 @@ RSpec.describe 'Games', type: :system, js: true do
             expect(game1.reload.go_fish.players.first.hand.size).to be > GoFish::STARTING_HAND_SIZE
           end
 
-          # TODO: test book message
           it 'displays round result message' do
             expect(page).not_to have_selector('div.notification--action')
             take_turn(game1)
