@@ -50,7 +50,7 @@ class GoFish
     players = payload['players'].map { |player_data| Player.from_json(player_data) }
     deck = Deck.from_json(payload['deck'])
     current_player = players.detect { |player| player.user_id == payload['current_player']['user_id'] }
-    winner = payload['winner']
+    winner = players.detect { |player| player.user_id == payload['winner']['user_id'] } unless payload['winner'].nil?
     round_results = payload['round_results']&.map { |round_result_data| RoundResult.from_json(round_result_data) }
     GoFish.new(players:, deck:, current_player:, winner:, round_results:)
   end
@@ -71,9 +71,9 @@ class GoFish
 
   def finalize_turn(opponent, rank)
     book_rank = create_book_if_possible(current_player)
+    game_over
     create_results(opponent, rank, book_rank)
     next_player unless stay_turn
-    game_over
     # TODO: deal cards to players with empty hands
   end
 
@@ -89,13 +89,12 @@ class GoFish
   end
 
   def create_results(opponent, rank, book_rank = nil)
-    round_results << RoundResult.new(current_player:, opponent:, rank:, card_drawn:, book_rank:)
+    round_results << RoundResult.new(current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:)
   end
 
-  # TODO: make game over message
   def game_over
     return unless deck.cards.empty? && players.all? { |player| player.hand.empty? }
 
-    self.winner = players.max_by { |player| player.books.size }.user_id
+    self.winner = players.max_by { |player| player.books.size }
   end
 end

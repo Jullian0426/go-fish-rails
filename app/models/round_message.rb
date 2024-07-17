@@ -1,15 +1,13 @@
-# frozen_string_literal: true
-
-# TODO: look into using a data object
 class RoundMessage
-  attr_accessor :current_player, :opponent, :rank, :card_drawn, :book_rank
+  attr_accessor :current_player, :opponent, :rank, :card_drawn, :book_rank, :winner
 
-  def initialize(current_player:, opponent:, rank:, card_drawn:, book_rank:)
+  def initialize(current_player:, opponent:, rank:, card_drawn:, book_rank:, winner: nil)
     @current_player = current_player
     @opponent = opponent
     @rank = rank
     @card_drawn = card_drawn
     @book_rank = book_rank
+    @winner = winner
   end
 
   def generate_player_messages
@@ -17,7 +15,8 @@ class RoundMessage
       action: player_action_message,
       response: player_response_message,
       feedback: player_feedback_message,
-      book: book_message(true)
+      book: book_message(true),
+      game_over: game_over_message(true)
     }.with_indifferent_access
   end
 
@@ -26,7 +25,8 @@ class RoundMessage
       action: opponent_action_message,
       response: opponent_response_message,
       feedback: opponent_feedback_message,
-      book: book_message(false)
+      book: book_message(false),
+      game_over: game_over_message(false)
     }.with_indifferent_access
   end
 
@@ -35,7 +35,8 @@ class RoundMessage
       action: others_action_message,
       response: others_response_message,
       feedback: others_feedback_message,
-      book: book_message(false)
+      book: book_message(false),
+      game_over: game_over_message(false)
     }.with_indifferent_access
   end
 
@@ -111,5 +112,17 @@ class RoundMessage
            end
 
     "#{name} made a book of #{book_rank}s"
+  end
+
+  def game_over_message(for_player)
+    return nil unless winner
+
+    name = if for_player
+             'You'
+           else
+             winner.name
+           end
+
+    "#{name} won the game!"
   end
 end

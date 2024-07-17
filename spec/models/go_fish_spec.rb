@@ -84,7 +84,7 @@ RSpec.describe GoFish, type: :model do
         player2.hand = [card7]
         go_fish.deck.cards.clear
         go_fish.play_round!(player2, '3')
-        expect(go_fish.winner).to eq(player1.user_id)
+        expect(go_fish.winner.user_id).to eq(player1.user_id)
       end
     end
   end
@@ -100,6 +100,7 @@ RSpec.describe GoFish, type: :model do
     before do
       go_fish.deal!
       go_fish.play_round!(player2, player1.hand.first.rank)
+      go_fish.winner = player1
     end
 
     context '#load' do
@@ -111,6 +112,7 @@ RSpec.describe GoFish, type: :model do
         expect(loaded_go_fish.players.map(&:user_id)).to match_array(go_fish.players.map(&:user_id))
         expect(loaded_go_fish.deck.cards).to match_array(go_fish.deck.cards)
         expect(loaded_go_fish.current_player.user_id).to eq(go_fish.current_player.user_id)
+        expect(loaded_go_fish.winner.user_id).to eq(go_fish.winner.user_id)
         expect(loaded_go_fish.round_results.last.messages_for(:player)).to match(go_fish.round_results.last.messages_for(:player))
       end
     end

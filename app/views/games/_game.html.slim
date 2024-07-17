@@ -48,6 +48,14 @@
           .badge-primary.badge--with-border #{game.go_fish.current_player.name}'s Turn
         .gf-panel__panel-body.gf-panel__panel-body--feed
           .notification-feed
+            - if game.go_fish.winner
+              - if current_user.id == game.go_fish.round_results.last.current_player.user_id
+                - context = :player
+              - else
+                - context = :others
+              .notification
+                span = game.go_fish.round_results.last.messages_for(context)['game_over']
+
             - game.go_fish.round_results&.reverse.each do |round_result|
               - if current_user.id == round_result.current_player.user_id
                 - context = :player
@@ -57,7 +65,6 @@
                 - context = :others
 
               - messages = round_result.messages_for(context)
-
 
               .notification.notification--action
                 span = messages['action']
@@ -80,7 +87,7 @@
                 = label_tag :rank, "Card Rank", class: "form-label"
                 = select_tag :rank, options_for_select(game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| [card.rank, card.rank] }.uniq), class: "form-control form-control--small"
 
-            - if game.go_fish.current_player.user_id == current_user.id
+            - if game.go_fish.current_player.user_id == current_user.id && game.go_fish.winner.nil?
               = f.submit "Ask for Cards", class: "btn-primary"
             - else
               = f.submit "Ask for Cards", class: "btn-primary", disabled: true
