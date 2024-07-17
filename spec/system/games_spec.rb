@@ -8,15 +8,15 @@ RSpec.describe 'Games', type: :system, js: true do
   let!(:game1) { create(:game, name: 'Game 1', required_player_count: 2) }
   let!(:game2) { create(:game, name: 'Game 2', required_player_count: 4) }
 
-  def join_game
-    within 'li', text: game1.name do
+  def join_game(game)
+    within 'li', text: game.name do
       click_button 'Join Game'
     end
   end
 
-  def take_turn
+  def take_turn(game)
     select user2.name, from: 'opponent_id'
-    select game1.go_fish.current_player.hand.first.rank, from: 'rank'
+    select game.go_fish.current_player.hand.first.rank, from: 'rank'
     click_button 'Ask for Cards'
   end
 
@@ -55,94 +55,136 @@ RSpec.describe 'Games', type: :system, js: true do
       expect(page).to have_content('Newly Created Game')
       expect(page).to have_content('0/4 Players')
     end
-
-
-    it 'Creating a new quote', :js do
-      visit quotes_path
-      expect(page).to have_selector 'h1', text: 'Quotes'
-
-      click_on 'New quote'
-      fill_in 'Text', with: 'Capybara quote'
-
-      expect(page).to have_selector 'h1', text: 'Quotes'
-      click_on 'Create quote'
-
-      expect(page).to have_selector 'h1', text: 'Quotes'
-      expect(page).to have_content 'Capybara quote'
-    end
   end
 
   describe 'showing a game' do
     context 'when game has not started' do
-      it 'shows waiting message and current game details' do
-        join_game
+      before do
+        join_game(game2)
+        game2.reload
+      end
 
+      it 'shows waiting message and current game details' do
         expect(page).to have_content(game1.name)
-        expect(page).to have_content('Edit')
-        expect(page).to have_content('Delete')
-        expect(page).to have_content('Waiting for game to start...')
+        expect(page).to have_content('Waiting for Players...')
         expect(page).to have_content(user1.name)
-        expect(page).to have_content("1/#{game1.required_player_count} Players")
+        expect(page).to have_content("1/#{game2.required_player_count} Players")
+      end
+
+      it 'broadcasts when another player joins the game' do
+        expect(page).to have_content("1/#{game2.required_player_count} Players")
+        game2.users << user2
+        game2.update(users: game2.users)
+
+        expect(page).to have_content("2/#{game2.reload.required_player_count} Players")
       end
     end
 
     context 'when game has started' do
-      before do
-        join_game
+      it 'broadcasts a started game to waiting users' do
+        join_game(game1)
+        expect(page).to have_content("1/#{game1.reload.required_player_count} Players")
+
         game1.users << user2
         game1.start!
-        visit game_path(game1)
+
+        expect(page).to have_selector("input[type=submit][value='Ask for Cards']")
       end
 
-      it 'displays current player' do
-        expect(page).to have_content("Current Player: #{User.find(game1.reload.go_fish.current_player.user_id).name}")
-      end
-
-      it "displays user1's hand" do
-        game1.reload.go_fish.current_player.hand.each do |card|
-          expect(page).to have_content("#{card.rank} of #{card.suit}")
-        end
-      end
-
-      it "does not display user2's hand" do
-        other_player = game1.reload.go_fish.players.find { |player| player.user_id == user2.id }
-        other_player.hand.each do |card|
-          expect(page).not_to have_content("#{card.rank} of #{card.suit}")
-        end
-      end
-
-      it 'displays turn form only for the current player' do
-        expect(page).to have_selector("input[type=submit][value='Take Turn']")
-        logout
-        login_as(user2, scope: :user)
-        visit game_path(game1)
-        expect(page).not_to have_selector("input[type=submit][value='Take Turn']")
-      end
-
-      context 'when playing a round' do
-        it 'runs play_round! when Take Turn button is pressed' do
-          expect_any_instance_of(Game).to receive(:play_round!).with(user2.id,
-                                                                     game1.go_fish.current_player.hand.first.rank)
-
-          expect(page).to have_selector("input[type=submit][value='Take Turn']")
-          take_turn
-        end
-
-        it "increases number of cards in user1's hand" do
-          take_turn
-          expect(page).to have_content('You asked for')
-          expect(game1.reload.go_fish.players.first.hand.size).to be > GoFish::STARTING_HAND_SIZE
-        end
-
-        # TODO: ask why this test is giving false negative
-        xit 'displays round result message' do
-          expect(game1.reload.go_fish.round_results).to be_empty
-          take_turn
-
+      context 'after users are updated' do
+        before do
+          join_game(game1)
+          game1.users << user2
+          game1.start!
           game1.reload
-          action = game1.go_fish.round_results.last.messages_for(:player)['action']
-          expect(page).to have_content(action)
-          expect(action).not_to be_nil
+        end
+
+        it 'displays current player' do
+          expect(page).to have_content("#{game1.go_fish.current_player.name}'s Turn")
+        end
+
+        it "displays user1's hand" do
+          game1.go_fish.current_player.hand.each do |card|
+            expect(page).to have_selector("img[alt='#{card.rank} of #{card.suit}']")
+          end
+        end
+
+        it "does not display user2's hand" do
+          other_player = game1.go_fish.players.find { |player| player.user_id == user2.id }
+          other_player.hand.each do |card|
+            expect(page).not_to have_selector("img[alt='#{card.rank} of #{card.suit}']")
+          end
+        end
+
+        it 'displays turn form only for the current player' do
+          expect(page).to have_selector("input[type=submit][value='Ask for Cards']")
+          logout
+          login_as(user2, scope: :user)
+          visit game_path(game1)
+          expect(page).to have_selector("input[type=submit][value='Ask for Cards'][disabled]")
+        end
+
+        context 'when playing a round' do
+          it 'runs play_round! when Ask for Cards button is pressed' do
+            expect_any_instance_of(Game).to receive(:play_round!).with(user2.id,
+                                                                       game1.go_fish.current_player.hand.first.rank)
+
+            expect(page).to have_selector("input[type=submit][value='Ask for Cards']")
+            take_turn(game1)
+          end
+
+          xit 'broadcasts when another user takes their turn' do
+            expect(page).to have_content("#{user1.name}'s Turn")
+            take_turn(game1)
+            expect(page).to have_content("#{user2.name}'s Turn")
+            game1.play_round!(user1.name, game1.go_fish.current_player.hand.first.rank)
+            expect(page).to have_content("#{user1.name}'s Turn")
+          end
+
+          it "increases number of cards in user1's hand" do
+            take_turn(game1)
+            expect(page).to have_content('You asked')
+            expect(game1.reload.go_fish.players.first.hand.size).to be > GoFish::STARTING_HAND_SIZE
+          end
+
+          it 'displays round result message' do
+            expect(page).not_to have_selector('div.notification--action')
+            take_turn(game1)
+
+            game1.reload
+            expect(page).to have_selector('div.notification--action')
+          end
+        end
+
+        context 'when a game is over' do
+          let(:card1) { Card.new(rank: '3', suit: 'Hearts') }
+          let(:card2) { Card.new(rank: '3', suit: 'Diamonds') }
+          let(:card3) { Card.new(rank: '3', suit: 'Clubs') }
+          let(:card4) { Card.new(rank: '3', suit: 'Spades') }
+          let(:book) { Book.new([card1, card2, card3, card4]) }
+          before do
+            game1.go_fish.deck.cards.clear
+            game1.go_fish.players.each do |player|
+              player.hand.clear
+            end
+          end
+
+          it 'tells the user if they have won' do
+            game1.go_fish.players.first.books << book
+            game1.update(go_fish: game1.go_fish)
+            expect(page).to have_content('Game Over: You win!')
+          end
+
+          it 'tells the user if another player has won' do
+            game1.go_fish.players.last.books << book
+            game1.update(go_fish: game1.go_fish)
+            expect(page).to have_content("Game Over: #{user2.name} wins!")
+          end
+
+          it 'disables the Ask for Cards button' do
+            game1.update(go_fish: game1.go_fish)
+            expect(page).to have_selector("input[type=submit][value='Ask for Cards'][disabled]")
+          end
         end
       end
     end

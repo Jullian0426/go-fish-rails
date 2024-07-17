@@ -25,6 +25,7 @@ class Game < ApplicationRecord
   end
 
   def start!
+    update(users:)
     return false unless required_player_count == users.count
 
     players = users.map { |user| Player.new(user_id: user.id) }
