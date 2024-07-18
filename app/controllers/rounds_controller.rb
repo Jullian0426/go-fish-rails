@@ -20,6 +20,6 @@ class RoundsController < ApplicationController
   end
 
   def round_params
-    params.permit(:opponent_id, :rank)
+    params.permit(:opponent_id, :rank, :game_id, :_method, :authenticity_token, :commit)
   end
 end

@@ -16,7 +16,7 @@ RSpec.describe 'Games', type: :system, js: true do
 
   def take_turn(game)
     select user2.name, from: 'opponent_id'
-    select game.go_fish.current_player.hand.first.rank, from: 'rank'
+    click_button game.go_fish.current_player.hand.first.rank.to_s
     click_button 'Ask for Cards'
   end
 
@@ -178,6 +178,7 @@ RSpec.describe 'Games', type: :system, js: true do
 
           it 'tells the user if another player has won' do
             take_turn(game1)
+            expect(page).not_to have_content("#{user1.name} won the game!")
             logout
             login_as(user2, scope: :user)
             visit game_path(game1)

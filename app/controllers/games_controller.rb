@@ -58,6 +58,6 @@ class GamesController < ApplicationController
   end
 
   def game_params
-    params.require(:game).permit(:name, :required_player_count)
+    params.require(:game).permit(:name, :required_player_count, :_method, :authenticity_token, :commit)
   end
 end
