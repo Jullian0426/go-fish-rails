@@ -1,10 +1,10 @@
-= turbo_stream_from "#{current_user.id}_#{@game.id}"
+= turbo_stream_from "games:#{@game.id}:users:#{current_user.id}"
 
 - if @game.started?
   main.game-view
     section.gf-panel.gf-panel--large-header-row.board-view
       .gf-panel__panel-header.gf-panel__panel-header--large
-        = link_to games_path('/index') do
+        = link_to games_path do
           span.material-symbols-outlined.icon--x-large.icon--weight-bold arrow_back
         span.gf-emphasis = @game.name
       .gf-panel__panel-body.gf-panel__panel-body--players
@@ -120,7 +120,7 @@
   main.game-view
     section.gf-panel.gf-panel--large-header-row.board-view
       .gf-panel__panel-header.gf-panel__panel-header--large
-        = link_to games_path('/index') do
+        = link_to games_path do
           span.material-symbols-outlined.icon--x-large.icon--weight-bold arrow_back
         span.gf-emphasis = @game.name
       .gf-panel__panel-body.gf-panel__panel-body--players

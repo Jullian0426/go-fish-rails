@@ -9,7 +9,7 @@ RSpec.describe 'Games', type: :system, js: true do
   let!(:game2) { create(:game, name: 'Game 2', required_player_count: 4) }
 
   def join_game(game)
-    within 'li', text: game.name do
+    within 'li', text: game.name, match: :first do
       click_button 'Join Game'
     end
   end
@@ -198,8 +198,14 @@ RSpec.describe 'Games', type: :system, js: true do
   end
 
   describe 'editing a game' do
-    xit 'allows editing an existing game' do
-      visit edit_game_path(game1)
+    before do
+      visit games_path
+      join_game(game1)
+      click_on 'arrow_back'
+    end
+
+    it 'allows editing an existing game' do
+      click_link 'Edit', match: :first
 
       find_field('Name').set("Edited #{game1.name}")
       click_button 'Update Game'
@@ -209,10 +215,14 @@ RSpec.describe 'Games', type: :system, js: true do
   end
 
   describe 'deleting a game' do
-    xit 'allows deleting an existing game' do
-      visit game_path(game1)
+    before do
+      visit games_path
+      join_game(game1)
+      visit games_path
+    end
 
-      click_button 'Delete'
+    it 'allows deleting an existing game' do
+      click_button 'Delete', match: :first
 
       expect(page).to have_no_content(game1.name)
     end

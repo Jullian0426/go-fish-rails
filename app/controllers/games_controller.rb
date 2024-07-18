@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_game, only: [:show, :edit, :update, :destroy]
+  before_action :set_game, only: %i[show edit update destroy]
 
   def index
     @games = Game.order(created_at: :desc)
@@ -33,16 +33,22 @@ class GamesController < ApplicationController
   end
 
   def update
-    if @game.update(game_params)
-      redirect_to @game, notice: 'Game was successfully updated.'
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @game.update(game_params)
+        format.html { redirect_to games_path, notice: 'Game was successfully updated.' }
+        format.turbo_stream { flash.now[:notice] = 'Game was successfully updated.' }
+      else
+        render :edit, status: :unprocessable_entity
+      end
     end
   end
 
   def destroy
     @game.destroy
-    redirect_to games_path, notice: 'Game was successfully deleted.'
+    respond_to do |format|
+      format.html { redirect_to games_path, notice: 'Game was successfully destroyed.' }
+      format.turbo_stream { flash.now[:notice] = 'Game was successfully destroyed.' }
+    end
   end
 
   private

@@ -1,6 +1,5 @@
 h1 Your Games
 ul.your_games
-  / TODO: use keys ("#{games:123:users:456}")
   = turbo_frame_tag "your_games"
     - if current_user.games.present?
       - current_user.games.each do |game|
