@@ -11,7 +11,7 @@ html
       .modal-wrapper(
         class=class_names('modal-wrapper--active' => response.status == 422)
         data-controller="toggle"
-        data-toggle-perform-on-connect-value=(response.status == 'OK')
+        data-toggle-perform-on-connect-value=(response.message == 'OK')
         data-toggle-active-class="modal-wrapper--active"
         data-turbo-cache="false"
         data-action="keydown.esc@window->toggle#off"

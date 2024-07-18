@@ -8,8 +8,7 @@ ul.your_games
       p You have not joined any games yet.
 
 
-= link_to 'Create New Game', new_game_path, class: 'btn btn--primary', data: { turbo_frame: dom_id(Game.new) }
-= turbo_frame_tag Game.new
+= modal_link_to 'Create New Game', new_game_path, class: 'btn btn--primary'
 
 
 h1 All Games

@@ -12,10 +12,12 @@ class GamesController < ApplicationController
   def new
     @game = Game.build
     @path = games_path
+    render layout: 'modal'
   end
 
   def edit
     @path = @game
+    render layout: 'modal'
   end
 
   def create
@@ -23,23 +25,17 @@ class GamesController < ApplicationController
 
     if @game.save
       @game.users << current_user
-      respond_to do |format|
-        format.html { redirect_to @game, notice: 'Game was successfully created.' }
-        format.turbo_stream { flash.now[:notice] = 'Game was successfully created.' }
-      end
+      redirect_to @game, notice: 'Game was successfully created.'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity, layout: 'modal'
     end
   end
 
   def update
-    respond_to do |format|
-      if @game.update(game_params)
-        format.html { redirect_to games_path, notice: 'Game was successfully updated.' }
-        format.turbo_stream { flash.now[:notice] = 'Game was successfully updated.' }
-      else
-        render :edit, status: :unprocessable_entity
-      end
+    if @game.update(game_params)
+      redirect_to games_path, notice: 'Game was successfully updated.'
+    else
+      render :edit, status: :unprocessable_entity, layout: 'modal'
     end
   end
 
