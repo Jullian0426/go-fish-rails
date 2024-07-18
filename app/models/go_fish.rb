@@ -1,6 +1,8 @@
 require_relative 'deck'
 
 class GoFish
+  class InvalidRank < StandardError; end
+
   STARTING_HAND_SIZE = 5
 
   attr_accessor :deck, :current_player, :players, :stay_turn, :winner, :round_results, :card_drawn
@@ -28,6 +30,8 @@ class GoFish
   end
 
   def play_round!(opponent, rank)
+    raise InvalidRank unless current_player.hand_has_rank?(rank)
+
     if opponent.hand_has_rank?(rank)
       take_cards(opponent, rank)
     else

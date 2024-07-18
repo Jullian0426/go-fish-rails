@@ -2,6 +2,8 @@ require_relative 'player'
 require_relative 'go_fish'
 
 class Game < ApplicationRecord
+  class GoFishError < StandardError; end
+
   has_many :game_users, dependent: :destroy
   has_many :users, through: :game_users
 

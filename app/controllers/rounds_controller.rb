@@ -6,11 +6,11 @@ class RoundsController < ApplicationController
     opponent_user_id = round_params[:opponent_id].to_i
     rank = round_params[:rank]
 
-    if @game.play_round!(opponent_user_id, rank)
-      redirect_to @game
-    else
-      redirect_to @game, alert: "Turn failed. Please try again."
-    end
+    @game.play_round!(opponent_user_id, rank)
+    redirect_to @game
+  rescue GoFish::InvalidRank
+    flash[:alert] = 'You must select a rank.'
+    redirect_to @game
   end
 
   private
