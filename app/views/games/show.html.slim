@@ -90,7 +90,10 @@
 
             .form-group.flex-grow-1
               = label_tag :rank, "Card Rank", class: "form-label"
-              = select_tag :rank, options_for_select(@game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| [card.rank, card.rank] }.uniq), class: "form-control form-control--small"
+              .rank-buttons(data-controller="rank-selector")
+                = hidden_field_tag :rank, '', data: { "rank-selector-target": 'input' }
+                - @game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| card.rank }.uniq.each do |rank|
+                  = button_tag rank, class: "btn rank-button", data: { action: 'click->rank-selector#select', "rank-selector-target": 'button', rank: rank }
 
           - if @game.go_fish.current_player.user_id == current_user.id && @game.go_fish.winner.nil?
             = f.submit "Ask for Cards", class: "btn-primary"
