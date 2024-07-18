@@ -89,7 +89,7 @@
               = select_tag :opponent_id, options_for_select(@game.go_fish.players.reject { |player| player.user_id == current_user.id }.map { |player| [player.name, player.user_id] }), class: "form-control form-control--small"
 
             .form-group.flex-grow-1
-              = label_tag :rank, "Card Rank", class: "form-label"
+              span.form-label Card Rank
               .rank-buttons(data-controller="rank-selector")
                 = hidden_field_tag :rank, '', data: { "rank-selector-target": 'input' }
                 - @game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| card.rank }.uniq.each do |rank|

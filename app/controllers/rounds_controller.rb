@@ -9,7 +9,7 @@ class RoundsController < ApplicationController
     @game.play_round!(opponent_user_id, rank)
     redirect_to @game
   rescue GoFish::InvalidRank
-    flash[:alert] = 'You must select a rank.'
+    flash[:danger] = 'Error: You must select a rank.'
     redirect_to @game
   end
 
