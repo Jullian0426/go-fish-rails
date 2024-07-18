@@ -3,6 +3,7 @@
 class RoundResult
   attr_accessor :current_player, :opponent, :rank, :card_drawn, :book_rank, :winner, :messages
 
+  # TODO: make id and update tests accordingly
   def initialize(current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:)
     @current_player = current_player
     @opponent = opponent

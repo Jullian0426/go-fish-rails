@@ -47,7 +47,7 @@
         span.gf-emphasis Game Feed
         .badge-primary.badge--with-border #{@game.go_fish.current_player.name}'s Turn
       .gf-panel__panel-body.gf-panel__panel-body--feed
-        .notification-feed
+        .notification-feed data-controller="notification-feed"
           - if @game.go_fish.winner
             - if current_user.id == @game.go_fish.round_results.last.current_player.user_id
               - context = :player
@@ -66,21 +66,22 @@
 
             - messages = round_result.messages_for(context)
 
-            .notification.notification--action
-              span = messages['action']
-            .notification-feed__reply
-              span.material-symbols-outlined.icon--x-large.icon--weight-semi-bold subdirectory_arrow_right
-              .notification.notification--response
-                span.gf-emphasis = messages['response']
-            .notification-feed__reply
-              span.material-symbols-outlined.icon--x-large.icon--weight-semi-bold subdirectory_arrow_right
-              .notification.notification--feedback
-                span.gf-emphasis = messages['feedback']
-            - if messages['book']
+            .notification-feed__round-result id="#{round_result.id}" data-notification-feed-target="item"
+              .notification.notification--action
+                span = messages['action']
+              .notification-feed__reply
+                span.material-symbols-outlined.icon--x-large.icon--weight-semi-bold subdirectory_arrow_right
+                .notification.notification--response
+                  span.gf-emphasis = messages['response']
               .notification-feed__reply
                 span.material-symbols-outlined.icon--x-large.icon--weight-semi-bold subdirectory_arrow_right
                 .notification.notification--feedback
-                  span.gf-emphasis = messages['book']
+                  span.gf-emphasis = messages['feedback']
+              - if messages['book']
+                .notification-feed__reply
+                  span.material-symbols-outlined.icon--x-large.icon--weight-semi-bold subdirectory_arrow_right
+                  .notification.notification--feedback
+                    span.gf-emphasis = messages['book']
 
         = form_for @game, url: game_rounds_path(@game), method: :post, html: { class: "action-choices" } do |f|
           .action-choices__input-collection
@@ -90,10 +91,10 @@
 
             .form-group.flex-grow-1
               span.form-label Card Rank
-              .rank-buttons(data-controller="rank-selector")
+              .rank-selector(data-controller="rank-selector")
                 = hidden_field_tag :rank, '', data: { "rank-selector-target": 'input' }
                 - @game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| card.rank }.uniq.each do |rank|
-                  = button_tag rank, class: "btn rank-button btn--small", data: { action: 'click->rank-selector#select', "rank-selector-target": 'button', rank: rank }
+                  = button_tag rank, class: "btn btn--small", data: { action: 'click->rank-selector#select', "rank-selector-target": 'button', rank: rank }
 
           - if @game.go_fish.current_player.user_id == current_user.id && @game.go_fish.winner.nil?
             = f.submit "Ask for Cards", class: "btn-primary"

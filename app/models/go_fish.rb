@@ -93,7 +93,7 @@ class GoFish
   end
 
   def create_results(opponent, rank, book_rank = nil)
-    round_results << RoundResult.new(current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:)
+    round_results.unshift(RoundResult.new(id: (round_results.length + 1), current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:))
   end
 
   def game_over
