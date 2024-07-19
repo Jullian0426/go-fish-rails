@@ -96,7 +96,9 @@
                 - @game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| card.rank }.uniq.each do |rank|
                   = button_tag rank, class: "btn btn--small", data: { action: 'click->rank-selector#select', "rank-selector-target": 'button', rank: rank }
 
-          - if @game.go_fish.current_player.user_id == current_user.id && @game.go_fish.winner.nil?
+          - if @game.go_fish.winner
+            = button_to 'Leave Game', game_game_user_path(@game), method: :delete, data: { confirm: 'Are you ready leave this game?' }, class: "btn-primary"
+          - elsif @game.can_take_turn?(current_user)
             = f.submit "Ask for Cards", class: "btn-primary"
           - else
             = f.submit "Ask for Cards", class: "btn-primary", disabled: true

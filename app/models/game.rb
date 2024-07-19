@@ -26,6 +26,10 @@ class Game < ApplicationRecord
     !go_fish.nil?
   end
 
+  def can_take_turn?(current_user)
+    go_fish.current_player.user_id == current_user.id && go_fish.winner.nil?
+  end
+
   def start!
     update(users:)
     return false unless required_player_count == users.count

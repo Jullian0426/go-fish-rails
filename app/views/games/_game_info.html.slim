@@ -2,10 +2,13 @@
   .games-section__game-row
     span #{game.name}
     .game-actions
-      - if game.started?
-        span.game-actions__player-count Game is Full
-      - else
+      - if !game.started?
         span.game-actions__player-count #{game.users.count}/#{game.required_player_count} Players
+      - elsif game.go_fish.winner
+        span.game-actions__player-count Game has Ended
+      - else
+        span.game-actions__player-count Game is Full
+
       - if current_user.games.include?(game)
         = link_to game_path(game), data: { turbo_frame: "_top" }, class: 'btn game-actions__button' do
           | Play Now
