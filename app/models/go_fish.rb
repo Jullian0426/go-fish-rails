@@ -2,6 +2,7 @@ require_relative 'deck'
 
 class GoFish
   class InvalidRank < StandardError; end
+  class InvalidTurn < StandardError; end
 
   STARTING_HAND_SIZE = 5
 
@@ -30,6 +31,7 @@ class GoFish
   end
 
   def play_round!(opponent, rank)
+    raise InvalidTurn unless winner.nil?
     raise InvalidRank unless current_player.hand_has_rank?(rank)
 
     if opponent.hand_has_rank?(rank)

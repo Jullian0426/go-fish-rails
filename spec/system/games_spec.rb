@@ -169,6 +169,7 @@ RSpec.describe 'Games', type: :system, js: true do
             game1.go_fish.players.first.add_to_hand([card1, card2, card3])
             game1.go_fish.players.last.add_to_hand([card4])
             game1.save!
+            game1.reload
           end
 
           it 'tells the user if they have won' do
@@ -192,6 +193,16 @@ RSpec.describe 'Games', type: :system, js: true do
             login_as(user2, scope: :user)
             visit game_path(game1)
             expect(page).to have_selector("input[type=submit][value='Ask for Cards'][disabled]")
+          end
+
+          # TODO: test no work :(
+          xit "doesn't allow a user to take a turn", :chrome do
+            take_turn(game1)
+            sleep 1
+            expect(page).to have_content('You won the game!')
+            game1.reload
+            game1.play_round!(user1.name, '3')
+            expect(page).to have_content('Error: Invalid Turn')
           end
         end
       end

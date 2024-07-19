@@ -30,9 +30,15 @@
 .notification-feed {
   display: flex;
   flex-direction: column;
-  align-items: start;
   overflow: auto;
   gap: var(--op-space-small);
+
+  .notification-feed__round-result {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--op-space-small);
+  }
 
   .notification-feed__reply {
     display: flex;

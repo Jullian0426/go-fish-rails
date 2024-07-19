@@ -8,8 +8,11 @@ class RoundsController < ApplicationController
 
     @game.play_round!(opponent_user_id, rank)
     redirect_to @game
+  rescue GoFish::InvalidTurn
+    flash[:danger] = 'Error: Invalid Turn'
+    redirect_to @game
   rescue GoFish::InvalidRank
-    flash[:danger] = 'Error: You must select a rank.'
+    flash[:danger] = 'Error: You must select a rank that you have.'
     redirect_to @game
   end
 
