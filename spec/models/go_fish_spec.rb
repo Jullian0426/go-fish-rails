@@ -35,9 +35,10 @@ RSpec.describe GoFish, type: :model do
 
     context '#take_cards' do
       it 'should take card from opponent and not change current player' do
-        go_fish.play_round!(player2, '6')
-        expect(player1.hand).to include(card3)
-        expect(player2.hand).not_to include(card3)
+        player2.hand << card5
+        go_fish.play_round!(player2, '3')
+        expect(player1.hand).to include(card5)
+        expect(player2.hand).not_to include(card5)
         expect(go_fish.current_player).to eq(player1)
       end
     end

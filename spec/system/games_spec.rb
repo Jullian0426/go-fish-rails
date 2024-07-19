@@ -37,7 +37,7 @@ RSpec.describe 'Games', type: :system, js: true do
     end
 
     it 'shows your games' do
-      expect(page).to have_content('You have not joined any games yet.')
+      expect(page).to have_content('You have no active games.')
       expect(page).not_to have_link(game1.name, href: game_path(game1))
     end
   end
@@ -174,7 +174,6 @@ RSpec.describe 'Games', type: :system, js: true do
 
           it 'tells the user if they have won' do
             take_turn(game1)
-            binding.irb
             expect(page).to have_content('You won the game!')
           end
 
