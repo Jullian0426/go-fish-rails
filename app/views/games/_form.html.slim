@@ -1,5 +1,5 @@
 = simple_form_for @game do |f|
-  = f.input :name, input_html: { autofocus: true }
+  = f.input :name
   = f.input :required_player_count unless editing
 
   = content_for :modal_actions

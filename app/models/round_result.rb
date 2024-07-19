@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class RoundResult
-  attr_accessor :current_player, :opponent, :rank, :card_drawn, :book_rank, :winner, :messages
+  attr_accessor :id, :current_player, :opponent, :rank, :card_drawn, :book_rank, :winner, :messages
 
-  # TODO: make id and update tests accordingly
-  def initialize(current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:)
+  def initialize(id:, current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:)
+    @id = id
     @current_player = current_player
     @opponent = opponent
     @rank = rank
@@ -14,13 +14,14 @@ class RoundResult
   end
 
   def self.from_json(round_result_data)
+    id = round_result_data['id'].to_i
     current_player = Player.from_json(round_result_data['current_player'])
     winner = Player.from_json(round_result_data['winner']) unless round_result_data['winner'].nil?
     opponent = Player.from_json(round_result_data['opponent'])
     rank = round_result_data['rank']
     book_rank = round_result_data['book_rank']
     card_drawn = Card.from_json(round_result_data['card_drawn']) unless round_result_data['card_drawn'].nil?
-    RoundResult.new(current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:)
+    RoundResult.new(id:, current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:)
   end
 
   # TODO: messages.send("#{context}_messages")

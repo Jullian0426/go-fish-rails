@@ -13,7 +13,7 @@ RSpec.describe RoundResult, type: :model do
 
   describe '#generate_messages' do
     it 'generates correct messages' do
-      round_result = RoundResult.new(current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:)
+      round_result = RoundResult.new(id: 1, current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:)
       round_message = RoundMessage.new(current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:)
 
       expect(round_result.messages_for(:player)).to eq(round_message.generate_player_messages)

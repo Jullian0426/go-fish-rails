@@ -25,7 +25,7 @@ class GamesController < ApplicationController
 
     if @game.save
       @game.users << current_user
-      redirect_to @game, notice: 'Game was successfully created.'
+      redirect_to games_path, notice: 'Game was successfully created.'
     else
       render :new, status: :unprocessable_entity, layout: 'modal'
     end

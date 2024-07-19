@@ -56,7 +56,7 @@
             .notification
               span = @game.go_fish.round_results.last.messages_for(context)['game_over']
 
-          - @game.go_fish.round_results&.reverse.each do |round_result|
+          - @game.go_fish.round_results&.each do |round_result|
             - if current_user.id == round_result.current_player.user_id
               - context = :player
             - elsif current_user.id == round_result.opponent.user_id
