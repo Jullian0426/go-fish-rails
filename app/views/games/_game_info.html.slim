@@ -1,10 +1,16 @@
 = turbo_frame_tag game
-  li
-    span> #{game.name}
-    span #{game.users.count}/#{game.required_player_count} Players
-    - if current_user.games.include?(game)
-      = link_to "Play Now", game_path(game), data: { turbo_frame: "_top" }, class: 'btn-primary'
-      = modal_link_to "Edit", edit_game_path(game), class: "btn"
-      = button_to "Delete", game_path(game), method: :delete, class: "btn-destructive"
-    - else
-      = button_to 'Join Game', game_game_users_path(game), method: :post, class: 'btn-primary', data: { turbo_frame: "_top" }
+  .games-section__game-row
+    span #{game.name}
+    .game-actions
+      - if game.started?
+        span.game-actions__player-count Game is Full
+      - else
+        span.game-actions__player-count #{game.users.count}/#{game.required_player_count} Players
+      - if current_user.games.include?(game)
+        = link_to game_path(game), data: { turbo_frame: "_top" }, class: 'btn game-actions__button' do
+          | Play Now
+          span.material-symbols-outlined arrow_right
+      - elsif !game.enough_players?
+        = button_to 'Join Game', game_game_users_path(game), method: :post, class: 'btn game-actions__button', data: { turbo_frame: "_top" }
+      - else
+        button.btn.game-actions__button.disabled In Progress

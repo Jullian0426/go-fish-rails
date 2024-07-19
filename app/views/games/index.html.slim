@@ -1,24 +1,20 @@
-h1 Your Games
-ul.your_games
-  = turbo_frame_tag "your_games"
-    - if current_user.games.present?
-      - current_user.games.each do |game|
+main.games-list
+  section.games-section
+    .games-section__game-header
+      span.gf-emphasis Your Games
+      = modal_link_to new_game_path, class: 'btn-primary' do
+        span.material-symbols-outlined add
+        | New Game
+    = turbo_frame_tag "your_games"
+      - if current_user.games.present?
+        - current_user.games.each do |game|
+          = render "game_info", game: game
+      - else
+        p You have not joined any games yet.
+
+  section.games-section
+    .games-section__game-header
+      span.gf-emphasis All Games
+    = turbo_frame_tag "all_games"
+      - @games.each do |game|
         = render "game_info", game: game
-    - else
-      p You have not joined any games yet.
-
-
-= modal_link_to 'Create New Game', new_game_path, class: 'btn btn--primary'
-
-
-h1 All Games
-ul.all_games
-  = turbo_frame_tag "all_games"
-    - @games.each do |game|
-      = render "game_info", game: game
-
-/ main.games-list
-/   .your-games
-/     .games-list__header
-/   .all-games
-/     .games-list__header

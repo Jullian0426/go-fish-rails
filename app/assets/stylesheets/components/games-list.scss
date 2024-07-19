@@ -1,0 +1,44 @@
+.games-list {
+  display: flex;
+  flex-direction: column;
+  padding-inline: var(--op-space-3x-large);
+  padding-block: var(--op-space-2x-large);
+  gap: var(--op-space-x-large);
+}
+
+.games-section {
+  gap: var(--op-space-x-small);
+
+  .games-section__game-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding-bottom: var(--op-space-small);
+  }
+
+  .games-section__game-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--op-border-all) var(--op-color-border);
+    border-radius: var(--op-radius-medium);
+    padding-inline: var(--op-space-medium);
+    padding-block: var(--op-space-x-small);
+    background-color: var(--op-color-neutral-plus-seven);
+    color: var(--op-color-neutral-on-plus-seven);
+  }
+}
+
+.game-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--op-space-large);
+
+  .game-actions__player-count {
+    color: var(--op-color-neutral-on-plus-seven-alt);
+  }
+
+  .game-actions__button {
+    background-color: var(--op-color-neutral-plus-seven);
+  }
+}

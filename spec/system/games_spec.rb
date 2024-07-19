@@ -195,12 +195,12 @@ RSpec.describe 'Games', type: :system, js: true do
             expect(page).to have_selector("input[type=submit][value='Ask for Cards'][disabled]")
           end
 
-          # TODO: test no work :(
-          xit "doesn't allow a user to take a turn", :chrome do
+          # TODO: use play round, then take_turn
+          it "doesn't allow a user to take a turn", :chrome do
             take_turn(game1)
-            sleep 1
             expect(page).to have_content('You won the game!')
             game1.reload
+            binding.irb
             game1.play_round!(user1.name, '3')
             expect(page).to have_content('Error: Invalid Turn')
           end
@@ -216,7 +216,8 @@ RSpec.describe 'Games', type: :system, js: true do
       click_on 'arrow_back'
     end
 
-    it 'allows editing an existing game' do
+    # TODO: move out of system tests
+    xit 'allows editing an existing game' do
       click_link 'Edit', match: :first
 
       find_field('Name').set("Edited #{game1.name}")

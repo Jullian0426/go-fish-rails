@@ -55,6 +55,6 @@ example_id                                    | status  | run_time        |
 ./spec/system/games_spec.rb[1:3:2:2:6:1]      | failed  | 2.51 seconds    |
 ./spec/system/games_spec.rb[1:3:2:2:6:2]      | passed  | 0.24208 seconds |
 ./spec/system/games_spec.rb[1:3:2:2:6:3]      | passed  | 0.22239 seconds |
-./spec/system/games_spec.rb[1:3:2:2:6:4]      | failed  | 3.76 seconds    |
+./spec/system/games_spec.rb[1:3:2:2:6:4]      | failed  | 10.87 seconds   |
 ./spec/system/games_spec.rb[1:4:1]            | passed  | 0.43792 seconds |
 ./spec/system/games_spec.rb[1:5:1]            | passed  | 6.09 seconds    |
