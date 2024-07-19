@@ -97,7 +97,7 @@
                   = button_tag rank, class: "btn btn--small", data: { action: 'click->rank-selector#select', "rank-selector-target": 'button', rank: rank }
 
           - if @game.go_fish.winner
-            = button_to 'Leave Game', game_game_user_path(@game), method: :delete, data: { confirm: 'Are you ready leave this game?' }, class: "btn-primary"
+            = link_to 'Leave Game', games_path, data: { confirm: 'Are you ready leave this game?' }, class: "btn-primary"
           - elsif @game.can_take_turn?(current_user)
             = f.submit "Ask for Cards", class: "btn-primary"
           - else

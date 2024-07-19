@@ -7,6 +7,8 @@
 }
 
 .games-section {
+  display: flex;
+  flex-direction: column;
   gap: var(--op-space-x-small);
 
   .games-section__game-header {
@@ -16,7 +18,13 @@
    padding-bottom: var(--op-space-small);
   }
 
-  .games-section__game-row {
+  .games-section__game-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--op-space-x-small);
+  }
+
+  .game-row {
     display: flex;
     justify-content: space-between;
     align-items: center;

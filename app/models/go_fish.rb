@@ -78,9 +78,9 @@ class GoFish
   def finalize_turn(opponent, rank)
     book_rank = create_book_if_possible(current_player)
     game_over
+    draw_if_empty
     create_results(opponent, rank, book_rank)
     next_player unless stay_turn
-    # TODO: deal cards to players with empty hands
   end
 
   def create_book_if_possible(player)
@@ -102,5 +102,14 @@ class GoFish
     return unless deck.cards.empty? && players.all? { |player| player.hand.empty? }
 
     self.winner = players.max_by { |player| player.books.size }
+  end
+
+  def draw_if_empty
+    players.each do |player|
+      if player.hand.empty? && deck.cards.any?
+        draw_count = [STARTING_HAND_SIZE, deck.cards.size].min
+        draw_count.times { player.add_to_hand(deck.deal) }
+      end
+    end
   end
 end

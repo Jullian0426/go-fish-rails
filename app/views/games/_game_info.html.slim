@@ -1,11 +1,9 @@
 = turbo_frame_tag game
-  .games-section__game-row
+  .game-row
     span #{game.name}
     .game-actions
       - if !game.started?
         span.game-actions__player-count #{game.users.count}/#{game.required_player_count} Players
-      - elsif game.go_fish.winner
-        span.game-actions__player-count Game has Ended
       - else
         span.game-actions__player-count Game is Full
 

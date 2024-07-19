@@ -13,6 +13,8 @@ class Card
   end
 
   def self.from_json(card_data)
+    return unless card_data
+
     rank = card_data['rank']
     suit = card_data['suit']
     Card.new(rank:, suit:)

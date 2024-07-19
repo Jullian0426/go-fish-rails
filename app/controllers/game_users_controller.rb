@@ -1,8 +1,8 @@
 class GameUsersController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_game, only: %i[create destroy]
 
   def create
-    @game = Game.find(params[:game_id])
     if @game.users.include?(current_user) || @game.enough_players?
       return redirect_to games_path, alert: 'Unable to join game'
     end
@@ -26,5 +26,11 @@ class GameUsersController < ApplicationController
     else
       redirect_to games_path, alert: 'Unable to leave game.'
     end
+  end
+
+  private
+
+  def set_game
+    @game = Game.find(params[:game_id])
   end
 end

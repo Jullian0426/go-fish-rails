@@ -9,7 +9,7 @@ RSpec.describe 'Games', type: :system, js: true do
   let!(:game2) { create(:game, name: 'Game 2', required_player_count: 4) }
 
   def join_game(game)
-    within('.games-section__game-row', text: game.name) do
+    within('.game-row', text: game.name) do
       click_button 'Join Game'
     end
   end
@@ -174,6 +174,7 @@ RSpec.describe 'Games', type: :system, js: true do
 
           it 'tells the user if they have won' do
             take_turn(game1)
+            binding.irb
             expect(page).to have_content('You won the game!')
           end
 
@@ -196,7 +197,7 @@ RSpec.describe 'Games', type: :system, js: true do
           end
 
           # TODO: move out of system tests
-          xit "doesn't allow a user to take a turn", :chrome do
+          xit "doesn't allow a user to take a turn" do
             take_turn(game1)
             expect(page).to have_content('You won the game!')
             game1.reload

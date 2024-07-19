@@ -18,7 +18,7 @@ RSpec.describe GoFish, type: :model do
     end
   end
 
-  describe 'play_round!' do
+  describe '#play_round!' do
     let(:card1) { Card.new(rank: '3', suit: 'H') }
     let(:card2) { Card.new(rank: '6', suit: 'H') }
     let(:card3) { Card.new(rank: '6', suit: 'C') }
@@ -28,8 +28,9 @@ RSpec.describe GoFish, type: :model do
     let(:card7) { Card.new(rank: '3', suit: 'S') }
 
     before do
-      player1.hand = [card1, card2]
-      player2.hand = [card3, card4]
+      player1.hand = [card1]
+      player2.hand = [card2, card3, card4]
+      go_fish.deck.cards = [card5, card6, card7]
     end
 
     context '#take_cards' do
@@ -71,6 +72,32 @@ RSpec.describe GoFish, type: :model do
         go_fish.deck.cards = [card7]
         go_fish.play_round!(player2, '3')
         expect(player1.hand).to include(card1, card5, card7)
+      end
+
+      context '#draw_if_empty' do
+        before do
+          player1.hand = [card1]
+          player2.hand = [card5, card6, card7]
+        end
+
+        it 'draws new cards for players with empty hands' do
+          go_fish.deck.cards = [card2, card3, card4, card5, card6, card7, card1, card2, card3, card4]
+
+          go_fish.play_round!(player2, '3')
+
+          go_fish.players.each do |player|
+            expect(player.hand.size).to eq(5)
+          end
+        end
+
+        it 'draws as many cards as available' do
+          go_fish.deck.cards = [card1, card2, card3]
+
+          go_fish.play_round!(player2, '3')
+
+          expect(player1.hand.size).to eq(3)
+          expect(player2.hand).to be_empty
+        end
       end
 
       it 'saves round result data' do

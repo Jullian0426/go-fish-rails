@@ -5,16 +5,18 @@ main.games-list
       = modal_link_to new_game_path, class: 'btn-primary' do
         span.material-symbols-outlined add
         | New Game
-    = turbo_frame_tag "your_games"
-      - if current_user.games.present?
+    = turbo_frame_tag "your_games", class: "games-section__game-rows"
+      - if current_user.games.present? && current_user.games.none? { |game| game.go_fish && game.go_fish.winner }
         - current_user.games.each do |game|
-          = render "game_info", game: game
+          - unless game.go_fish && game.go_fish.winner
+            = render "game_info", game: game
       - else
-        p You have not joined any games yet.
+        p You have no active games.
 
   section.games-section
     .games-section__game-header
       span.gf-emphasis All Games
-    = turbo_frame_tag "all_games"
+    = turbo_frame_tag "all_games", class: "games-section__game-rows"
       - @games.each do |game|
-        = render "game_info", game: game
+        - unless game.go_fish && game.go_fish.winner
+          = render "game_info", game: game
