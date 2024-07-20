@@ -10,10 +10,13 @@ html lang="en" data-theme-mode="light" data-theme="cyan"
     meta name="turbo-refresh-method" content="morph"
     meta name="turbo-refresh-scroll" content="preserve"
     meta content="width=device-width, initial-scale=1" name="viewport"
-  body.app-body
-    #flash
-      = render 'layouts/flash'
-    = turbo_frame_tag 'modal'
-    = turbo_frame_tag 'panel'
-    = render 'confirm'
-    = yield
+  body.app-with-sidebar
+    = render 'layouts/sidebar'
+    .app-body
+      #flash
+        = render 'layouts/flash'
+      = turbo_frame_tag 'modal'
+      = turbo_frame_tag 'panel'
+      = render 'confirm'
+      .app__content
+        = yield
