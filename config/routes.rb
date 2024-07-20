@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
   devise_for :users
 
+  resources :pages, only: [] do
+    collection do
+      get 'home'
+      get 'leaderboard'
+      get 'status'
+    end
+  end
+
   resources :games do
     resources :game_users, only: [:create, :destroy]
     resources :rounds, only: [:create]

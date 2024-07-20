@@ -11,7 +11,8 @@ html lang="en" data-theme-mode="light" data-theme="cyan"
     meta name="turbo-refresh-scroll" content="preserve"
     meta content="width=device-width, initial-scale=1" name="viewport"
   body.app-with-sidebar
-    = render 'layouts/sidebar'
+    - unless controller_name == 'games' && action_name == 'show'
+      = render 'layouts/sidebar'
     .app-body
       #flash
         = render 'layouts/flash'

@@ -1,8 +1,8 @@
-main.container
-  h1 Go Fish
+main.container.container--sm
+  h1.gf-emphasis Go Fish
 
   - if user_signed_in?
-    = link_to "View Games", games_path
-    = button_to "Sign out", destroy_user_session_path, method: :delete, class: "btn btn--dark"
+    = link_to "View Games", games_path, class: 'btn'
+    = button_to "Sign out", destroy_user_session_path, method: :delete, class: "btn"
   - else
-    = link_to "Sign in", new_user_session_path, class: "btn btn--dark"
+    = link_to "Sign in", new_user_session_path, class: "btn"
