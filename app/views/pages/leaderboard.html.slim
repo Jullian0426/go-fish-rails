@@ -10,6 +10,7 @@ main.container.container--sm
         th Losses
         th Win Rate
         th Games Played
+        th Total Time Played
     tbody
       - @users.each_with_index do |user, index|
         tr
@@ -19,3 +20,4 @@ main.container.container--sm
           td = user.losses
           td #{user.win_rate}%
           td = user.total_games
+          td = user.time_played

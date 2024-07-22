@@ -27,9 +27,29 @@ class User < ApplicationRecord
     games.select(&:finished?).count
   end
 
+  def time_played
+    finished_games = games.reject { |game| game.finished_at.nil? }
+    total_seconds = finished_games.sum { |game| game.finished_at - game.started_at }
+    format_time(total_seconds)
+  end
+
   private
 
   def winner?(game)
     game.go_fish&.winners&.map(&:user_id)&.include?(id)
+  end
+
+  def format_time(seconds)
+    if seconds >= 3600
+      hours = (seconds / 3600).to_i
+      minutes = ((seconds % 3600) / 60).to_i
+      "#{hours}h:#{minutes}m"
+    elsif seconds >= 60
+      minutes = (seconds / 60).to_i
+      remaining_seconds = (seconds % 60).to_i
+      "#{minutes}m:#{remaining_seconds}s"
+    else
+      "#{seconds.to_i}s"
+    end
   end
 end
