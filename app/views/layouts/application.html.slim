@@ -10,8 +10,10 @@ html lang="en" data-theme-mode="light" data-theme="cyan"
     meta name="turbo-refresh-method" content="morph"
     meta name="turbo-refresh-scroll" content="preserve"
     meta content="width=device-width, initial-scale=1" name="viewport"
-  body.app-with-sidebar
-    - unless controller_name == 'games' && action_name == 'show'
+  - is_game_show_page = controller_name == 'games' && action_name == 'show'
+  - body_class = is_game_show_page ? '' : 'app-with-sidebar'
+  body class=body_class
+    - unless is_game_show_page
       = render 'layouts/sidebar'
     .app-body
       #flash
@@ -19,5 +21,4 @@ html lang="en" data-theme-mode="light" data-theme="cyan"
       = turbo_frame_tag 'modal'
       = turbo_frame_tag 'panel'
       = render 'confirm'
-      .app__content
-        = yield
+      = yield
