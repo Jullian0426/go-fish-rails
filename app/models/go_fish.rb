@@ -6,14 +6,14 @@ class GoFish
 
   STARTING_HAND_SIZE = 5
 
-  attr_accessor :deck, :current_player, :players, :stay_turn, :winner, :round_results, :card_drawn
+  attr_accessor :deck, :current_player, :players, :stay_turn, :winners, :round_results, :card_drawn
 
-  def initialize(players:, deck: Deck.new, current_player: players.first, winner: nil, round_results: [])
+  def initialize(players:, deck: Deck.new, current_player: players.first, winners: [], round_results: [])
     @players = players
     @deck = deck
     @current_player = current_player
     @stay_turn = false
-    @winner = winner
+    @winners = winners
     @round_results = round_results
     @card_drawn = nil
   end
@@ -31,7 +31,7 @@ class GoFish
   end
 
   def play_round!(opponent, rank)
-    raise InvalidTurn unless winner.nil?
+    raise InvalidTurn unless winners.empty?
     raise InvalidRank unless current_player.hand_has_rank?(rank)
 
     if opponent.hand_has_rank?(rank)
@@ -56,9 +56,9 @@ class GoFish
     players = payload['players'].map { |player_data| Player.from_json(player_data) }
     deck = Deck.from_json(payload['deck'])
     current_player = players.detect { |player| player.user_id == payload['current_player']['user_id'] }
-    winner = players.detect { |player| player.user_id == payload['winner']['user_id'] } unless payload['winner'].nil?
+    winners = payload['winners']&.map { |winner_data| players.detect { |player| player.user_id == winner_data['user_id'] } } || []
     round_results = payload['round_results']&.map { |round_result_data| RoundResult.from_json(round_result_data) }
-    GoFish.new(players:, deck:, current_player:, winner:, round_results:)
+    GoFish.new(players:, deck:, current_player:, winners:, round_results:)
   end
 
   private
@@ -98,15 +98,21 @@ class GoFish
   end
 
   def create_results(opponent, rank, book_rank = nil)
-    round_results.unshift(RoundResult.new(id: (round_results.length + 1), current_player:, opponent:, rank:, card_drawn:, book_rank:, winner:))
+    round_results.unshift(RoundResult.new(id: (round_results.length + 1), current_player:, opponent:, rank:, card_drawn:, book_rank:, winners:))
   end
 
   def game_over
     return unless deck.cards.empty? && players.all? { |player| player.hand.empty? }
 
-    self.winner = players.max_by do |player|
-      [player.books.size, player.book_score]
+    max_books = players.map { |player| player.books.size }.max
+    potential_winners = players.select { |player| player.books.size == max_books }
+
+    if potential_winners.size > 1
+      max_value = potential_winners.map(&:book_score).max
+      potential_winners = potential_winners.select { |player| player.book_score == max_value }
     end
+
+    self.winners = potential_winners
   end
 
   def draw_if_empty
@@ -119,7 +125,7 @@ class GoFish
   end
 
   def skip_turns
-    return if winner
+    return if winners.any?
 
     next_player until current_player.hand.any?
   end

@@ -1,13 +1,13 @@
 class RoundMessage
-  attr_accessor :current_player, :opponent, :rank, :card_drawn, :book_rank, :winner
+  attr_accessor :current_player, :opponent, :rank, :card_drawn, :book_rank, :winners
 
-  def initialize(current_player:, opponent:, rank:, card_drawn:, book_rank:, winner: nil)
+  def initialize(current_player:, opponent:, rank:, card_drawn:, book_rank:, winners: [])
     @current_player = current_player
     @opponent = opponent
     @rank = rank
     @card_drawn = card_drawn
     @book_rank = book_rank
-    @winner = winner
+    @winners = winners
   end
 
   def generate_player_messages
@@ -115,14 +115,17 @@ class RoundMessage
   end
 
   def game_over_message(for_player)
-    return nil unless winner
+    return nil unless winners.any?
 
-    name = if for_player
-             'You'
-           else
-             winner.name
-           end
-
-    "#{name} won the game!"
+    names = winners.map(&:name)
+    formatted_names = case names.length
+                      when 1
+                        names.first
+                      when 2
+                        names.join(' and ')
+                      else
+                        "#{names[0..-2].join(', ')}, and #{names[-1]}"
+                      end
+    "#{formatted_names} won the game!"
   end
 end
