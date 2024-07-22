@@ -12,6 +12,7 @@ html lang="en" data-theme-mode="light" data-theme="cyan"
     meta content="width=device-width, initial-scale=1" name="viewport"
   - is_game_show_page = controller_name == 'games' && action_name == 'show'
   - body_class = is_game_show_page ? '' : 'app-with-sidebar'
+  - content_class = is_game_show_page ? '' : 'app__content'
   body class=body_class
     - unless is_game_show_page
       = render 'layouts/sidebar'
@@ -21,4 +22,5 @@ html lang="en" data-theme-mode="light" data-theme="cyan"
       = turbo_frame_tag 'modal'
       = turbo_frame_tag 'panel'
       = render 'confirm'
-      = yield
+      div class=content_class
+        = yield

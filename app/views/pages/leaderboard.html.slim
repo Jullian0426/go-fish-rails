@@ -1,2 +1,21 @@
 main.container.container--sm
   h1.gf-emphasis Leaderboard
+
+  table.table-primary.table--auto-layout.table--default-density.table--sticky-header
+    thead
+      tr
+        th Rank
+        th Name
+        th Wins
+        th Losses
+        th Win Rate
+        th Games Played
+    tbody
+      - @users.each_with_index do |user, index|
+        tr
+          td = index + 1
+          td = user.name
+          td = user.wins
+          td = user.losses
+          td #{user.win_rate}%
+          td = user.total_games

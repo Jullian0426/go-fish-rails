@@ -5,6 +5,7 @@ class PagesController < ApplicationController
   end
 
   def leaderboard
+    @users = User.all.sort_by { |user| [-user.win_rate, -user.wins] }
   end
 
   def status
