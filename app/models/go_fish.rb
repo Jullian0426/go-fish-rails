@@ -104,7 +104,9 @@ class GoFish
   def game_over
     return unless deck.cards.empty? && players.all? { |player| player.hand.empty? }
 
-    self.winner = players.max_by { |player| player.books.size }
+    self.winner = players.max_by do |player|
+      [player.books.size, player.book_score]
+    end
   end
 
   def draw_if_empty

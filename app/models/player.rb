@@ -24,6 +24,10 @@ class Player
     removed_cards
   end
 
+  def book_score
+    books.sum(&:value)
+  end
+
   def name
     User.find(user_id).name
   end

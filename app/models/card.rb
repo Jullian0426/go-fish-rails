@@ -12,6 +12,10 @@ class Card
     @suit = suit
   end
 
+  def value
+    RANKS.index(rank)
+  end
+
   def self.from_json(card_data)
     return unless card_data
 

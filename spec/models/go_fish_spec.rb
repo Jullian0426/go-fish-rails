@@ -107,21 +107,36 @@ RSpec.describe GoFish, type: :model do
         expect(go_fish.round_results).not_to be_empty
       end
 
-      it 'sets the winner when a go_fish is over' do
-        player1.hand = [card1, card5, card6]
-        player2.hand = [card7]
-        go_fish.deck.cards.clear
-        go_fish.play_round!(player2, '3')
-        expect(go_fish.winner.user_id).to eq(player1.user_id)
-      end
-    end
+      context '#game_over' do
+        before do
+          player1.hand = [card1, card5, card6]
+          player2.hand = [card7]
+          go_fish.deck.cards.clear
+        end
 
-    it 'skips a player if they have no cards after drawing' do
-      player1.hand = [card1, card5, card6]
-      player2.hand = []
-      go_fish.deck.cards = []
-      go_fish.play_round!(player2, '3')
-      expect(go_fish.current_player).to eq player1
+        it 'sets the winner when a game is over' do
+          go_fish.play_round!(player2, '3')
+          expect(go_fish.winner.user_id).to eq(player1.user_id)
+        end
+
+        it 'sets the winner to who has the highest book score if necessary' do
+          player2.books << Book.new([Card.new(rank: '6', suit: 'Clubs')])
+          go_fish.play_round!(player2, '3')
+          expect(go_fish.winner.user_id).to eq(player2.user_id)
+        end
+
+        xit 'sets both players as winners in the case of a tie' do
+          
+        end
+      end
+
+      it 'skips a player if they have no cards after drawing' do
+        player1.hand = [card1, card5, card6]
+        player2.hand = []
+        go_fish.deck.cards = []
+        go_fish.play_round!(player2, '3')
+        expect(go_fish.current_player).to eq player1
+      end
     end
   end
 
