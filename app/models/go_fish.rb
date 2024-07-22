@@ -70,11 +70,11 @@ class GoFish
   end
 
   def go_fish(rank)
-    self.card_drawn = deck.deal
-    return if card_drawn.nil?
+    return if deck.cards.empty?
 
+    self.card_drawn = deck.deal
     current_player.add_to_hand([card_drawn])
-    self.stay_turn = card_drawn.rank
+    self.stay_turn = card_drawn.rank == rank
   end
 
   def finalize_turn(opponent, rank)

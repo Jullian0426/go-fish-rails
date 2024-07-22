@@ -6,7 +6,7 @@ main.games-list
         span.material-symbols-outlined add
         | New Game
     = turbo_frame_tag "your_games", class: "games-section__game-rows"
-      - if current_user.games.present? && current_user.games.none? { |game| game.go_fish && game.go_fish.winner }
+      - if current_user.games.present?
         - current_user.games.each do |game|
           - unless game.go_fish && game.go_fish.winner
             = render "game_info", game: game
