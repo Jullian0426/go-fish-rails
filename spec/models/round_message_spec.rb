@@ -24,6 +24,65 @@ RSpec.describe RoundMessage, type: :model do
     expect(messages[:game_over]).to eq(game_over)
   end
 
+  describe '#generate_player_messages' do
+    it 'generates the correct player messages when drawing a card' do
+      round_message.book_rank = nil
+      round_message.winners = []
+      messages = round_message.generate_player_messages
+
+      expect_messages(messages, action: "You asked #{opponent.name} for #{rank}s",
+                                response: "Go Fish: #{opponent.name} doesn't have any #{rank}s",
+                                feedback: "You drew a #{card_drawn.rank} of #{card_drawn.suit}",
+                                book: nil,
+                                game_over: nil)
+    end
+
+    it 'generates the correct player messages when taking cards' do
+      round_message.card_drawn = nil
+      round_message.book_rank = nil
+      round_message.winners = []
+      messages = round_message.generate_player_messages
+
+      expect_messages(messages, action: "You asked #{opponent.name} for #{rank}s",
+                                response: "#{opponent.name} had the #{rank}s",
+                                feedback: "You took the cards from #{opponent.name}",
+                                book: nil,
+                                game_over: nil)
+    end
+
+    it 'generates the correct player messages when making a book' do
+      round_message.winners = []
+      messages = round_message.generate_player_messages
+
+      expect_messages(messages, action: "You asked #{opponent.name} for #{rank}s",
+                                response: "Go Fish: #{opponent.name} doesn't have any #{rank}s",
+                                feedback: "You drew a #{card_drawn.rank} of #{card_drawn.suit}",
+                                book: "You made a book of #{book_rank}s",
+                                game_over: nil)
+    end
+
+    it 'generates the correct player messages when the game is over' do
+      messages = round_message.generate_player_messages
+
+      expect_messages(messages, action: "You asked #{opponent.name} for #{rank}s",
+                                response: "Go Fish: #{opponent.name} doesn't have any #{rank}s",
+                                feedback: "You drew a #{card_drawn.rank} of #{card_drawn.suit}",
+                                book: "You made a book of #{book_rank}s",
+                                game_over: 'You won the game!')
+    end
+
+    it 'generates the correct player messages when there are multiple winners' do
+      round_message.winners = [current_player, opponent]
+      messages = round_message.generate_player_messages
+
+      expect_messages(messages, action: "You asked #{opponent.name} for #{rank}s",
+                                response: "Go Fish: #{opponent.name} doesn't have any #{rank}s",
+                                feedback: "You drew a #{card_drawn.rank} of #{card_drawn.suit}",
+                                book: "You made a book of #{book_rank}s",
+                                game_over: "You and #{opponent.name} won the game!")
+    end
+  end
+
   describe '#generate_opponent_messages' do
     it 'generates the correct opponent messages when drawing a card' do
       round_message.book_rank = nil

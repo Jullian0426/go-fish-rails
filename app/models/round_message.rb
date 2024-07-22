@@ -117,7 +117,7 @@ class RoundMessage
   def game_over_message(for_player)
     return nil unless winners.any?
 
-    names = winners.map(&:name)
+    names = winners.map { |winner| for_player && winner.user_id == current_player.user_id ? 'You' : winner.name }
     formatted_names = case names.length
                       when 1
                         names.first

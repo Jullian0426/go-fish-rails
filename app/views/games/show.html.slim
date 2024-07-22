@@ -48,7 +48,7 @@
         .badge-primary.badge--with-border #{@game.go_fish.current_player.name}'s Turn
       .gf-panel__panel-body.gf-panel__panel-body--feed
         .notification-feed data-controller="notification-feed"
-          - if @game.go_fish.winner
+          - if @game.go_fish.winners.any?
             - if current_user.id == @game.go_fish.round_results.last.current_player.user_id
               - context = :player
             - else
@@ -96,7 +96,7 @@
                 - @game.go_fish.players.find { |player| player.user_id == current_user.id }.hand.map { |card| card.rank }.uniq.each do |rank|
                   = button_tag rank, class: "btn btn--small", data: { action: 'click->rank-selector#select', "rank-selector-target": 'button', rank: rank }
 
-          - if @game.go_fish.winner
+          - if @game.go_fish.winners.any?
             = link_to 'Leave Game', games_path, data: { confirm: 'Are you ready leave this game?' }, class: "btn-primary"
           - elsif @game.can_take_turn?(current_user)
             = f.submit "Ask for Cards", class: "btn-primary"

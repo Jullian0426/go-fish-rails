@@ -27,11 +27,11 @@ class Game < ApplicationRecord
   end
 
   def finished?
-    !go_fish.winner.nil?
+    go_fish.winners.any?
   end
 
   def can_take_turn?(current_user)
-    go_fish.current_player.user_id == current_user.id && go_fish.winner.nil?
+    go_fish.current_player.user_id == current_user.id && go_fish.winners.empty?
   end
 
   def start!

@@ -30,6 +30,6 @@ class User < ApplicationRecord
   private
 
   def winner?(game)
-    game.go_fish&.winner&.user_id == id
+    game.go_fish&.winners&.map(&:user_id)&.include?(id)
   end
 end

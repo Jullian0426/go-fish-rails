@@ -50,7 +50,7 @@ RSpec.describe User, type: :model do
     game.start!
     return unless winner
 
-    game.go_fish.winner = game.go_fish.players.find { |player| player.user_id == winner.id }
+    game.go_fish.winners << game.go_fish.players.find { |player| player.user_id == winner.id }
     game.save!
   end
 end
