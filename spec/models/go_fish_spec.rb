@@ -115,6 +115,14 @@ RSpec.describe GoFish, type: :model do
         expect(go_fish.winner.user_id).to eq(player1.user_id)
       end
     end
+
+    it 'skips a player if they have no cards after drawing' do
+      player1.hand = [card1, card5, card6]
+      player2.hand = []
+      go_fish.deck.cards = []
+      go_fish.play_round!(player2, '3')
+      expect(go_fish.current_player).to eq player1
+    end
   end
 
   describe 'serialization' do

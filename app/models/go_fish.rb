@@ -71,8 +71,10 @@ class GoFish
 
   def go_fish(rank)
     self.card_drawn = deck.deal
+    return if card_drawn.nil?
+
     current_player.add_to_hand([card_drawn])
-    self.stay_turn = card_drawn.rank == rank
+    self.stay_turn = card_drawn.rank
   end
 
   def finalize_turn(opponent, rank)
@@ -81,6 +83,7 @@ class GoFish
     draw_if_empty
     create_results(opponent, rank, book_rank)
     next_player unless stay_turn
+    skip_turns
   end
 
   def create_book_if_possible(player)
@@ -111,5 +114,11 @@ class GoFish
         draw_count.times { player.add_to_hand(deck.deal) }
       end
     end
+  end
+
+  def skip_turns
+    return if winner
+
+    next_player until current_player.hand.any?
   end
 end
