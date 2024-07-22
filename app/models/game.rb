@@ -42,12 +42,22 @@ class Game < ApplicationRecord
     go_fish = GoFish.new(players:)
     go_fish.deal!
     # update started_at: DateTime.current
-    update(go_fish:)
+    update(go_fish:, started_at: DateTime.current)
   end
 
   def play_round!(opponent_user_id, rank)
     opponent = go_fish.players.find { |player| player.user_id == opponent_user_id }
     go_fish.play_round!(opponent, rank)
-    save!
+    complete_round
+  end
+
+  private
+
+  def complete_round
+    if finished?
+      update(finished_at: DateTime.current)
+    else
+      save!
+    end
   end
 end
