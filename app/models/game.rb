@@ -55,6 +55,9 @@ class Game < ApplicationRecord
 
   def complete_round
     if finished?
+      game_users.where(user_id: go_fish.winners.map(&:user_id)).each do |game_user|
+        game_user.update(winner: true)
+      end
       update(finished_at: DateTime.current)
     else
       save!
