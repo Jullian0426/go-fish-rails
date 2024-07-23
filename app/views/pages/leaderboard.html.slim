@@ -16,10 +16,10 @@ main.container.container--sm
       - @leaderboard.each_with_index do |entry, index|
         tr
           td = index + 1
-          td = entry.points
+          td = entry.score
           td = entry.user_name
           td = entry.wins
           td = entry.losses
-          td #{entry.winning_percentage}%
+          td #{entry.win_rate}%
           td = entry.games_played
-          td = entry.seconds_played
+          td = entry.formatted_time

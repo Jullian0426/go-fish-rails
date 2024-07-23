@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_23_193156) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_23_195256) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,9 +61,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_23_193156) do
           CASE
               WHEN ((COALESCE(wins_table.wins, (0)::bigint) + COALESCE(losses_table.losses, (0)::bigint)) = 0) THEN (0)::numeric
               ELSE round((((COALESCE(wins_table.wins, (0)::bigint))::numeric / ((COALESCE(wins_table.wins, (0)::bigint) + COALESCE(losses_table.losses, (0)::bigint)))::numeric) * (100)::numeric), 2)
-          END AS winning_percentage,
+          END AS win_rate,
       COALESCE(time_table.total_seconds, (0)::numeric) AS seconds_played,
-      COALESCE(points_table.total_points, (0)::bigint) AS points
+      COALESCE(score_table.total_score, (0)::bigint) AS score
      FROM ((((users
        LEFT JOIN ( SELECT users_1.id AS user_id,
               count(game_users.winner) AS wins
@@ -85,11 +85,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_23_193156) do
             WHERE (games.finished_at IS NOT NULL)
             GROUP BY users_1.id) time_table ON ((users.id = time_table.user_id)))
        LEFT JOIN ( SELECT users_1.id AS user_id,
-              sum(game_users.score) AS total_points
+              sum(game_users.score) AS total_score
              FROM (users users_1
                JOIN game_users ON ((users_1.id = game_users.user_id)))
-            GROUP BY users_1.id) points_table ON ((users.id = points_table.user_id)))
-    ORDER BY COALESCE(points_table.total_points, (0)::bigint) DESC,
+            GROUP BY users_1.id) score_table ON ((users.id = score_table.user_id)))
+    ORDER BY COALESCE(score_table.total_score, (0)::bigint) DESC,
           CASE
               WHEN ((COALESCE(wins_table.wins, (0)::bigint) + COALESCE(losses_table.losses, (0)::bigint)) = 0) THEN (0)::numeric
               ELSE round((((COALESCE(wins_table.wins, (0)::bigint))::numeric / ((COALESCE(wins_table.wins, (0)::bigint) + COALESCE(losses_table.losses, (0)::bigint)))::numeric) * (100)::numeric), 2)
