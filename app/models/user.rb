@@ -5,8 +5,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  def name
-    email.split('@').first.capitalize
+  before_save :set_name
+
+  def set_name
+    self.name = email.split('@').first.capitalize
   end
 
   def wins
