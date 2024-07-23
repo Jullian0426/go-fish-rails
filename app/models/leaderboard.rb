@@ -1,5 +1,6 @@
 class Leaderboard < ApplicationRecord
   self.primary_key = :user_id
+  paginates_per 25
 
   def readonly?
     true

@@ -13,9 +13,9 @@ main.container.container--sm
         th Games Played
         th Total Time Played
     tbody
-      - @leaderboard.each_with_index do |entry, index|
+      - @leaderboards.each do |entry|
         tr
-          td = index + 1
+          td rank
           td = entry.score
           td = entry.user_name
           td = entry.wins
@@ -23,3 +23,5 @@ main.container.container--sm
           td #{entry.win_rate}%
           td = entry.games_played
           td = entry.formatted_time
+    tfoot
+      = paginate @leaderboards

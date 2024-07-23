@@ -6,8 +6,8 @@ main.games-list
         span.material-symbols-outlined add
         | New Game
     = turbo_frame_tag "your_games", class: "games-section__game-rows"
-      - if current_user.games.present?
-        - current_user.games.each do |game|
+      - if @my_games.any?
+        - @my_games.each do |game|
           - unless game.go_fish && game.go_fish.winners.any?
             = render "game_info", game: game
       - else
@@ -20,3 +20,5 @@ main.games-list
       - @games.each do |game|
         - unless game.go_fish && game.go_fish.winners.any?
           = render "game_info", game: game
+
+  = paginate @games

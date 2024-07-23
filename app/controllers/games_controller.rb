@@ -3,7 +3,8 @@ class GamesController < ApplicationController
   before_action :set_game, only: %i[show edit update destroy]
 
   def index
-    @games = Game.order(created_at: :desc)
+    @my_games = current_user.games.joinable
+    @games = Game.joinable.page(params[:page])
   end
 
   def show

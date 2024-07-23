@@ -12,6 +12,9 @@ class Game < ApplicationRecord
 
   serialize :go_fish, coder: GoFish
 
+  scope :joinable, -> { order(created_at: :desc).where(finished_at: nil) }
+  paginates_per 10
+
   after_update_commit lambda {
     users.each do |user|
       broadcast_refresh_to "games:#{id}:users:#{user.id}"

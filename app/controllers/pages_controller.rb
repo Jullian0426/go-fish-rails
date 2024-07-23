@@ -5,7 +5,7 @@ class PagesController < ApplicationController
   end
 
   def leaderboard
-    @leaderboard = Leaderboard.all
+    @leaderboards = Leaderboard.all.page(params[:page])
   end
 
   def status
