@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_23_183603) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_23_193156) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,4 +51,48 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_23_183603) do
 
   add_foreign_key "game_users", "games"
   add_foreign_key "game_users", "users"
+
+  create_view "leaderboards", sql_definition: <<-SQL
+      SELECT users.id AS user_id,
+      users.name AS user_name,
+      COALESCE(wins_table.wins, (0)::bigint) AS wins,
+      COALESCE(losses_table.losses, (0)::bigint) AS losses,
+      (COALESCE(wins_table.wins, (0)::bigint) + COALESCE(losses_table.losses, (0)::bigint)) AS games_played,
+          CASE
+              WHEN ((COALESCE(wins_table.wins, (0)::bigint) + COALESCE(losses_table.losses, (0)::bigint)) = 0) THEN (0)::numeric
+              ELSE round((((COALESCE(wins_table.wins, (0)::bigint))::numeric / ((COALESCE(wins_table.wins, (0)::bigint) + COALESCE(losses_table.losses, (0)::bigint)))::numeric) * (100)::numeric), 2)
+          END AS winning_percentage,
+      COALESCE(time_table.total_seconds, (0)::numeric) AS seconds_played,
+      COALESCE(points_table.total_points, (0)::bigint) AS points
+     FROM ((((users
+       LEFT JOIN ( SELECT users_1.id AS user_id,
+              count(game_users.winner) AS wins
+             FROM (users users_1
+               JOIN game_users ON ((users_1.id = game_users.user_id)))
+            WHERE (game_users.winner = true)
+            GROUP BY users_1.id) wins_table ON ((users.id = wins_table.user_id)))
+       LEFT JOIN ( SELECT users_1.id AS user_id,
+              count(game_users.winner) AS losses
+             FROM (users users_1
+               JOIN game_users ON ((users_1.id = game_users.user_id)))
+            WHERE (game_users.winner = false)
+            GROUP BY users_1.id) losses_table ON ((users.id = losses_table.user_id)))
+       LEFT JOIN ( SELECT users_1.id AS user_id,
+              sum(EXTRACT(epoch FROM (games.finished_at - games.started_at))) AS total_seconds
+             FROM ((users users_1
+               JOIN game_users ON ((users_1.id = game_users.user_id)))
+               JOIN games ON ((game_users.game_id = games.id)))
+            WHERE (games.finished_at IS NOT NULL)
+            GROUP BY users_1.id) time_table ON ((users.id = time_table.user_id)))
+       LEFT JOIN ( SELECT users_1.id AS user_id,
+              sum(game_users.score) AS total_points
+             FROM (users users_1
+               JOIN game_users ON ((users_1.id = game_users.user_id)))
+            GROUP BY users_1.id) points_table ON ((users.id = points_table.user_id)))
+    ORDER BY COALESCE(points_table.total_points, (0)::bigint) DESC,
+          CASE
+              WHEN ((COALESCE(wins_table.wins, (0)::bigint) + COALESCE(losses_table.losses, (0)::bigint)) = 0) THEN (0)::numeric
+              ELSE round((((COALESCE(wins_table.wins, (0)::bigint))::numeric / ((COALESCE(wins_table.wins, (0)::bigint) + COALESCE(losses_table.losses, (0)::bigint)))::numeric) * (100)::numeric), 2)
+          END DESC;
+  SQL
 end

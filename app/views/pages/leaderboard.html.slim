@@ -13,13 +13,13 @@ main.container.container--sm
         th Games Played
         th Total Time Played
     tbody
-      - @users.each_with_index do |user, index|
+      - @leaderboard.each_with_index do |entry, index|
         tr
           td = index + 1
-          td = user.total_score
-          td = user.name
-          td = user.wins
-          td = user.losses
-          td #{user.win_rate}%
-          td = user.total_games
-          td = user.time_played
+          td = entry.points
+          td = entry.user_name
+          td = entry.wins
+          td = entry.losses
+          td #{entry.winning_percentage}%
+          td = entry.games_played
+          td = entry.seconds_played

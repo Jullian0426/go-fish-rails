@@ -5,9 +5,7 @@ class PagesController < ApplicationController
   end
 
   def leaderboard
-    @users = User.includes(:game_users, :games).all.sort do |a, b|
-      [b.total_score, b.win_rate] <=> [a.total_score, a.win_rate]
-    end
+    @leaderboard = Leaderboard.all
   end
 
   def status
