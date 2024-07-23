@@ -5,6 +5,7 @@ main.container.container--sm
     thead
       tr
         th Rank
+        th Score
         th Name
         th Wins
         th Losses
@@ -15,6 +16,7 @@ main.container.container--sm
       - @users.each_with_index do |user, index|
         tr
           td = index + 1
+          td = user.total_score
           td = user.name
           td = user.wins
           td = user.losses

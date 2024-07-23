@@ -35,6 +35,10 @@ class User < ApplicationRecord
     format_time(total_seconds)
   end
 
+  def total_score
+    game_users.sum { |game_user| game_user.score || 0 }
+  end
+
   private
 
   def format_time(seconds)
