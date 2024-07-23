@@ -55,12 +55,28 @@ class Game < ApplicationRecord
 
   def complete_round
     if finished?
-      game_users.where(user_id: go_fish.winners.map(&:user_id)).each do |game_user|
-        game_user.update(winner: true)
+      winning_user_ids = go_fish.winners.map(&:user_id)
+
+      game_users.each do |game_user|
+        game_user.update(winner: winning_user_ids.include?(game_user.user_id))
       end
+
       update(finished_at: DateTime.current)
+      generate_score
     else
       save!
+    end
+  end
+
+  def generate_score
+    game_users.each do |game_user|
+      if game_user.winner
+        player = go_fish.players.find { |p| p.user_id == game_user.user_id }
+        score = player.books.sum(&:value)
+        game_user.update(score:)
+      else
+        game_user.update(score: 0)
+      end
     end
   end
 end

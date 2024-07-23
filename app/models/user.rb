@@ -12,11 +12,11 @@ class User < ApplicationRecord
   end
 
   def wins
-    games.select { |game| winner?(game) }.count
+    game_users.select(&:winner).size
   end
 
   def losses
-    games.select { |game| !winner?(game) && game.finished? }.count
+    game_users.reject(&:winner).size
   end
 
   def win_rate
@@ -26,7 +26,7 @@ class User < ApplicationRecord
   end
 
   def total_games
-    games.select(&:finished?).count
+    wins + losses
   end
 
   def time_played
@@ -36,10 +36,6 @@ class User < ApplicationRecord
   end
 
   private
-
-  def winner?(game)
-    game.go_fish&.winners&.map(&:user_id)&.include?(id)
-  end
 
   def format_time(seconds)
     if seconds >= 3600
