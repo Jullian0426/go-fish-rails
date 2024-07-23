@@ -81,3 +81,5 @@ group :test do
   gem 'test-prof'
   gem 'webdrivers'
 end
+
+gem "kaminari", "~> 1.2"
