@@ -1,4 +1,4 @@
-main.games-list
+main.container
   section.games-section
     .games-section__game-header
       span.gf-emphasis Your Games
@@ -16,9 +16,8 @@ main.games-list
   section.games-section
     .games-section__game-header
       span.gf-emphasis All Games
+      = paginate @games
     = turbo_frame_tag "all_games", class: "games-section__game-rows"
       - @games.each do |game|
         - unless game.go_fish && game.go_fish.winners.any?
           = render "game_info", game: game
-
-  = paginate @games

@@ -1,0 +1,10 @@
+.ransack-filter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--op-space-x-small);
+}
+
+.ransack-filter__buttons {
+  display: flex;
+  gap: var(--op-space-x-small);
+}
