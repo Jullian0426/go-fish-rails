@@ -1,6 +1,6 @@
 main.container
   h1.gf-emphasis Leaderboard
-  = render 'shared/search_form', q: @q, url: leaderboard_pages_path, search_field: :user_name_cont
+  = render 'shared/search_form', target: @leaderboards, url: leaderboard_pages_path, search_field: :user_name_cont
 
   table.table-primary.table--auto-layout.table--default-density.table--sticky-header.table--sticky-footer
     thead
@@ -26,9 +26,3 @@ main.container
           td #{entry.win_rate}%
           td = entry.games_played
           td = entry.formatted_time
-    - if @leaderboards.total_pages > 1
-      tfoot
-        tr
-          td colspan="8"
-            .flex.justify-center
-              = paginate @leaderboards

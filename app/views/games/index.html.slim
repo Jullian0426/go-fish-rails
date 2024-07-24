@@ -16,8 +16,7 @@ main.container
   section.games-section
     .games-section__game-header
       span.gf-emphasis All Games
-      = paginate @games
-    = render 'shared/search_form', q: @q, url: games_path, search_field: :name_cont
+    = render 'shared/search_form', target: @games, url: games_path, search_field: :name_cont
     = turbo_frame_tag "all_games", class: "games-section__game-rows"
       - @games.each do |game|
         - unless game.go_fish && game.go_fish.winners.any?

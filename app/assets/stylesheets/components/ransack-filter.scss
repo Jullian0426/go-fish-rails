@@ -4,6 +4,11 @@
   gap: var(--op-space-x-small);
 }
 
+.ransack-filter__actions {
+  display: flex;
+  justify-content: space-between;
+}
+
 .ransack-filter__buttons {
   display: flex;
   gap: var(--op-space-x-small);
