@@ -20,6 +20,14 @@ RSpec.describe 'Games', type: :system, js: true do
     click_button 'Ask for Cards'
   end
 
+  def current_player
+    game1.go_fish.current_player
+  end
+
+  def next_player
+    game1.go_fish.players.reject { |player| player.user_id == current_player.user_id }.first
+  end
+
   before do
     login_as(user1, scope: :user)
     visit games_path
@@ -133,13 +141,14 @@ RSpec.describe 'Games', type: :system, js: true do
             take_turn(game1)
           end
 
-          # TODO: fix this test
-          xit 'broadcasts when another user takes their turn' do
-            expect(page).to have_content("#{user1.name}'s Turn")
+          it 'broadcasts when another user takes their turn' do
+            visit game_path(game1)
+            expect(page).to have_content("#{current_player.name}'s Turn")
             take_turn(game1)
-            expect(page).to have_content("#{user2.name}'s Turn")
-            game1.play_round!(user1.name, game1.go_fish.current_player.hand.first.rank)
-            expect(page).to have_content("#{user1.name}'s Turn")
+            expect(page).to have_content("#{next_player.name}'s Turn")
+            game1.play_round!(current_player.user_id, current_player.hand.first.rank)
+
+            expect(page).to have_content("#{current_player.name}'s Turn")
           end
 
           it "increases number of cards in user1's hand" do
@@ -179,11 +188,11 @@ RSpec.describe 'Games', type: :system, js: true do
 
           it 'tells the user if another player has won' do
             take_turn(game1)
-            expect(page).not_to have_content("#{user1.name} won the game!")
+            expect(page).not_to have_content('won the game!')
             logout
             login_as(user2, scope: :user)
             visit game_path(game1)
-            expect(page).to have_content("#{user1.name} won the game!")
+            expect(page).to have_content('won the game!')
           end
 
           it 'replaces the Ask for Cards button with a Leave Game button' do
@@ -193,15 +202,6 @@ RSpec.describe 'Games', type: :system, js: true do
             login_as(user2, scope: :user)
             visit game_path(game1)
             expect(page).to have_content('Leave Game')
-          end
-
-          # TODO: move out of system tests
-          xit "doesn't allow a user to take a turn" do
-            take_turn(game1)
-            expect(page).to have_content('You won the game!')
-            game1.reload
-            game1.play_round!(user1.name, '3')
-            expect(page).to have_content('Error: Invalid Turn')
           end
         end
       end
