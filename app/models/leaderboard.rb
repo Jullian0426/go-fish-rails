@@ -1,4 +1,6 @@
 class Leaderboard < ApplicationRecord
+  attr_accessor :rank
+
   self.primary_key = :user_id
   paginates_per 25
 
@@ -18,5 +20,13 @@ class Leaderboard < ApplicationRecord
     else
       "#{seconds_played.to_i}s"
     end
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["user_name"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
   end
 end
