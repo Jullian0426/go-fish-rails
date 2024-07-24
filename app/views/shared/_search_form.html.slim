@@ -1,0 +1,6 @@
+= search_form_for q, url: url, method: :get, class: 'ransack-filter' do |f|
+  = f.label search_field, 'Filter', class: 'sr-only'
+  = f.search_field search_field, class: 'form-control', placeholder: 'Search by name'
+  .ransack-filter__buttons
+    = f.submit 'Search', class: 'btn-primary'
+    = link_to 'Clear Filters', url, class: 'btn-destructive'

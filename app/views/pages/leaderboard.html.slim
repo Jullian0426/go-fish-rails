@@ -1,11 +1,6 @@
 main.container
   h1.gf-emphasis Leaderboard
-  = search_form_for @q, url: leaderboard_pages_path, method: :get, class: 'ransack-filter' do |f|
-    = f.label :user_name_cont, 'Filter by name', class: 'sr-only'
-    = f.search_field :user_name_cont, class: 'form-control', placeholder: 'Search by name'
-    .ransack-filter__buttons
-      = button_to 'Clear', leaderboard_pages_path, method: :get, class: 'btn'
-      = f.submit 'Search', class: 'btn-primary'
+  = render 'shared/search_form', q: @q, url: leaderboard_pages_path, search_field: :user_name_cont
 
   table.table-primary.table--auto-layout.table--default-density.table--sticky-header.table--sticky-footer
     thead
@@ -31,8 +26,9 @@ main.container
           td #{entry.win_rate}%
           td = entry.games_played
           td = entry.formatted_time
-    tfoot
-      tr
-        td colspan="8"
-          .flex.justify-center
-            = paginate @leaderboards
+    - if @leaderboards.total_pages > 1
+      tfoot
+        tr
+          td colspan="8"
+            .flex.justify-center
+              = paginate @leaderboards

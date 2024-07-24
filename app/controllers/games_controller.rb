@@ -4,7 +4,9 @@ class GamesController < ApplicationController
 
   def index
     @my_games = current_user.games.joinable
-    @games = Game.joinable.page(params[:page])
+
+    @q = Game.joinable.ransack(params[:q])
+    @games = @q.result.page(params[:page])
   end
 
   def show

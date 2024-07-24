@@ -54,6 +54,10 @@ class Game < ApplicationRecord
     complete_round
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    %w[name]
+  end
+
   private
 
   def complete_round
