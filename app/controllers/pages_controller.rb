@@ -7,14 +7,33 @@ class PagesController < ApplicationController
   def leaderboard
     @q = Leaderboard.ransack(params[:q])
     page = (params[:page].presence || 1).to_i
-    @leaderboards = @q.result.order(score: :desc).page(page)
+    @leaderboards = @q.result.page(page)
 
-    @ranked_leaderboards = @leaderboards.each_with_index.map do |leaderboard, index|
-      leaderboard.rank = ((page - 1) * @leaderboards.limit_value) + index + 1
+    sort_direction = determine_sort_direction
+    @ranked_leaderboards = rank_leaderboards(@leaderboards, page, sort_direction)
+  end
+
+  def status
+  end
+
+  private
+
+  def determine_sort_direction
+    @q.sorts.first&.dir || 'desc'
+  end
+
+  def rank_leaderboards(leaderboards, page, sort_direction)
+    leaderboards.each_with_index.map do |leaderboard, index|
+      leaderboard.rank = calculate_rank(index, page, leaderboards.limit_value, leaderboards.total_count, sort_direction)
       leaderboard
     end
   end
 
-  def status
+  def calculate_rank(index, page, limit_value, total_count, sort_direction)
+    if sort_direction == 'desc'
+      ((page - 1) * limit_value) + index + 1
+    else
+      total_count - ((page - 1) * limit_value) - index
+    end
   end
 end

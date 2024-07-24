@@ -6,21 +6,24 @@ main.container.container--sm
       = f.search_field :user_name_cont, class: 'form-control', placeholder: 'Search by name'
       = f.submit 'Search', class: 'btn btn-primary'
     = button_to 'Clear', leaderboard_pages_path, method: :get, class: 'btn btn-primary'
+
   table.table-primary.table--auto-layout.table--default-density.table--sticky-header
     thead
       tr
-        th Rank
-        th Score
+        - unless params[:q] && params[:q][:user_name_cont].present?
+          th Rank
+        th = sort_link(@q, :score, 'Score', { default_order: :desc })
         th Name
-        th Wins
-        th Losses
-        th Win Rate
-        th Games Played
-        th Total Time Played
+        th = sort_link(@q, :wins, 'Wins', { default_order: :desc })
+        th = sort_link(@q, :losses, 'Losses', { default_order: :desc })
+        th = sort_link(@q, :win_rate, 'Win Rate', { default_order: :desc })
+        th = sort_link(@q, :games_played, 'Games Played', { default_order: :desc })
+        th = sort_link(@q, :seconds_played, 'Total Time Played', { default_order: :desc })
     tbody
       - @ranked_leaderboards.each do |entry|
         tr
-          td = entry.rank
+          - unless params[:q] && params[:q][:user_name_cont].present?
+            td = entry.rank
           td = entry.score
           td = entry.user_name
           td = entry.wins
