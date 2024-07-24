@@ -3,7 +3,6 @@ Rails.application.routes.draw do
 
   resources :pages, only: [] do
     collection do
-      get 'home'
       get 'leaderboard'
       get 'status'
       get 'history'
@@ -21,5 +20,5 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")
-  root to: "pages#home"
+  root to: "games#index"
 end
