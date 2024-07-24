@@ -22,6 +22,8 @@ class Game < ApplicationRecord
     users.each do |user|
       broadcast_refresh_to "games:#{id}:users:#{user.id}"
     end
+    broadcast_refresh_to 'status' if started? && !finished?
+    broadcast_refresh_to 'history' if finished?
   }
 
   def enough_players?
@@ -33,7 +35,7 @@ class Game < ApplicationRecord
   end
 
   def finished?
-    go_fish.winners.any?
+    go_fish&.winners&.any?
   end
 
   def can_take_turn?(current_user)
@@ -98,7 +100,7 @@ class Game < ApplicationRecord
 
   def update_game_user(game_user, winner_ids)
     is_winner = winner_ids.include?(game_user.user_id)
-    player = go_fish.players.find { |p| p.user_id == user_id }
+    player = go_fish.players.find { |p| p.user_id == game_user.user_id }
     score = is_winner ? generate_score(player) : 0
     game_user.update(winner: is_winner, score:)
   end
