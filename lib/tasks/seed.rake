@@ -18,7 +18,7 @@ namespace :db do
   desc 'Seed the database with users and games'
   task seed: :environment do
     # Create 1000 users
-    1000.times do |i|
+    10_000.times do |i|
       User.create!(
         email: "user#{i + 1}@example.com",
         password: 'password',
@@ -29,7 +29,7 @@ namespace :db do
     user_count = User.count
 
     # Create games and play random number of rounds
-    1000.times do |i|
+    10_000.times do |i|
       num_users = (2..5).to_a.sample
       offset = rand(user_count - num_users)
       users = User.offset(offset).limit(num_users)

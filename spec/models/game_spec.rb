@@ -80,7 +80,7 @@ RSpec.describe Game, type: :model do
     let(:player2) { game.go_fish.players.last }
 
     it 'finds the opponent by user_id' do
-      opponent_user_id = user2.id
+      opponent_user_id = player2.user_id
       opponent = game.go_fish.players.find { |player| player.user_id == opponent_user_id }
       expect(opponent).to eq(game.go_fish.players.last)
     end
@@ -92,8 +92,20 @@ RSpec.describe Game, type: :model do
       game.go_fish.deck.cards.clear
 
       expect(game.finished_at).to be_nil
-      game.play_round!(user2.id, 'King')
+      game.play_round!(player2.user_id, 'King')
       expect(game.reload.finished_at).not_to be_nil
+    end
+
+    context '#generate_score' do
+      it 'calculates the score for the winner based on their books' do
+        player1.hand = [card2, card3, card4]
+        player2.hand = [card1]
+        game.go_fish.deck.cards.clear
+        game.play_round!(player2.user_id, 'King')
+
+        expect(game.game_users.find_by(user_id: player1.user_id).score).to eq(card1.value)
+        expect(game.game_users.find_by(user_id: player2.user_id).score).to eq(0)
+      end
     end
   end
 end
