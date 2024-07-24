@@ -8,6 +8,7 @@ class Leaderboard < ApplicationRecord
     true
   end
 
+  # TODO: Create helper to prevent duplicate method
   def formatted_time
     if seconds_played >= 3600
       hours = (seconds_played / 3600).to_i

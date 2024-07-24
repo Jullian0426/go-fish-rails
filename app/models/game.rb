@@ -13,6 +13,9 @@ class Game < ApplicationRecord
   serialize :go_fish, coder: GoFish
 
   scope :joinable, -> { order(created_at: :desc).where(started_at: nil) }
+  scope :in_progress, -> { order(created_at: :desc).where.not(started_at: nil).where(finished_at: nil) }
+  scope :finished, -> { order(created_at: :desc).where.not(finished_at: nil) }
+
   paginates_per 10
 
   after_update_commit lambda {
@@ -58,9 +61,23 @@ class Game < ApplicationRecord
     %w[name]
   end
 
-  def generate_score(game_user)
-    player = go_fish.players.find { |p| p.user_id == game_user.user_id }
+  def generate_score(player)
     player.books.sum(&:value)
+  end
+
+  # TODO: Create helper to prevent duplicate method
+  def formatted_time(seconds_played)
+    if seconds_played >= 3600
+      hours = (seconds_played / 3600).to_i
+      minutes = ((seconds_played % 3600) / 60).to_i
+      "#{hours}h:#{minutes}m"
+    elsif seconds_played >= 60
+      minutes = (seconds_played / 60).to_i
+      remaining_seconds = (seconds_played % 60).to_i
+      "#{minutes}m:#{remaining_seconds}s"
+    else
+      "#{seconds_played.to_i}s"
+    end
   end
 
   private
@@ -81,7 +98,8 @@ class Game < ApplicationRecord
 
   def update_game_user(game_user, winner_ids)
     is_winner = winner_ids.include?(game_user.user_id)
-    score = is_winner ? generate_score(game_user) : 0
+    player = go_fish.players.find { |p| p.user_id == user_id }
+    score = is_winner ? generate_score(player) : 0
     game_user.update(winner: is_winner, score:)
   end
 end

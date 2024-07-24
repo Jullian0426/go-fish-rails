@@ -5,8 +5,7 @@ class GamesController < ApplicationController
   def index
     @my_games = current_user.games
 
-    # TODO: add joinable scope
-    @q = Game.ransack(params[:q])
+    @q = Game.joinable.ransack(params[:q])
     @games = @q.result.page(params[:page])
   end
 

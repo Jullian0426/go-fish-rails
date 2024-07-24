@@ -1,2 +1,21 @@
-main.container.container
-  h1.gf-emphasis Status
+main.container
+  h1.gf-emphasis Game Status
+  = render 'shared/search_form', target: @games, url: status_pages_path, search_field: :name_cont
+
+  table.table-primary.table--auto-layout.table--default-density.table--sticky-header.table--sticky-footer
+    thead
+      tr
+        th Name
+        th Current Player
+        th Current Round
+        th Players and Scores
+    tbody
+      - @games.each do |game|
+        tr
+          td = game.name
+          td = game.go_fish.current_player.name
+          td = game.go_fish.round_results.size
+          td
+            .flex.gap-xxs.flex-col
+              - game.go_fish.players.each do |player|
+                span #{player.name}: #{game.generate_score(player)}

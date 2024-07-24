@@ -14,9 +14,13 @@ class PagesController < ApplicationController
   end
 
   def status
+    @q = Game.in_progress.ransack(params[:q])
+    @games = @q.result.page(params[:page])
   end
 
   def history
+    @q = Game.finished.ransack(params[:q])
+    @games = @q.result.page(params[:page])
   end
 
   private
