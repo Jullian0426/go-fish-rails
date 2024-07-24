@@ -5,6 +5,7 @@ def play_random_rounds(game)
   number_of_rounds.times do
     break if game.go_fish.winners.any?
 
+    # TODO: Create helper for playing a round
     current_player = game.go_fish.current_player
     opponents = game.go_fish.players.reject { |player| player.user_id == current_player.user_id }
     opponent_id = opponents.sample.user_id

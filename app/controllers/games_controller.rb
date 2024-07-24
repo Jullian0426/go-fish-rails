@@ -3,9 +3,10 @@ class GamesController < ApplicationController
   before_action :set_game, only: %i[show edit update destroy]
 
   def index
-    @my_games = current_user.games.joinable
+    @my_games = current_user.games
 
-    @q = Game.joinable.ransack(params[:q])
+    # TODO: add joinable scope
+    @q = Game.ransack(params[:q])
     @games = @q.result.page(params[:page])
   end
 

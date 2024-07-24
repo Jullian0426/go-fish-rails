@@ -12,7 +12,7 @@ class Game < ApplicationRecord
 
   serialize :go_fish, coder: GoFish
 
-  scope :joinable, -> { order(created_at: :desc).where(finished_at: nil) }
+  scope :joinable, -> { order(created_at: :desc).where(started_at: nil) }
   paginates_per 10
 
   after_update_commit lambda {

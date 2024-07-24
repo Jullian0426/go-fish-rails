@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       get 'home'
       get 'leaderboard'
       get 'status'
+      get 'history'
     end
   end
 

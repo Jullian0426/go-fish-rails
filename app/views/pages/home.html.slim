@@ -1,8 +1,13 @@
 main.container.container--sm
   h1.gf-emphasis Go Fish
-
+  .btn-group
+    - if user_signed_in?
+      = link_to "View Games", games_path, class: 'btn-primary'
+  .btn-group
+    = link_to "Leaderboard", leaderboard_pages_path, class: 'btn'
+    = link_to "Status", status_pages_path, class: 'btn'
+    = link_to "History", history_pages_path, class: 'btn'
   - if user_signed_in?
-    = link_to "View Games", games_path, class: 'btn'
-    = button_to "Sign out", destroy_user_session_path, method: :delete, class: "btn"
+    = button_to "Sign out", destroy_user_session_path, method: :delete, class: "btn-destructive"
   - else
     = link_to "Sign in", new_user_session_path, class: "btn"

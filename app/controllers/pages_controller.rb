@@ -16,6 +16,9 @@ class PagesController < ApplicationController
   def status
   end
 
+  def history
+  end
+
   private
 
   def determine_sort_direction

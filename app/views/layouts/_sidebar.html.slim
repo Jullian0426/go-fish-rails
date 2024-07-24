@@ -11,11 +11,17 @@ nav.sidebar.sidebar--drawer
     = link_to status_pages_path, class: 'btn btn--no-border'
       span.material-symbols-outlined.icon--outlined.icon--medium.icon--weight-normal.icon--normal-emphasis bar_chart
       | Status
+    = link_to history_pages_path, class: 'btn btn--no-border'
+      span.material-symbols-outlined.icon--outlined.icon--medium.icon--weight-normal.icon--normal-emphasis book_2
+      | History
+
+
   .sidebar__content.sidebar__content--end
     .divider
-    button.btn.btn--no-border
-      span.material-symbols-outlined.icon--outlined.icon--medium.icon--weight-normal.icon--normal-emphasis person
-      | Profile
+    / button.btn.btn--no-border
+    /   span.material-symbols-outlined.icon--outlined.icon--medium.icon--weight-normal.icon--normal-emphasis person
+    /   | Profile
+
     = button_to destroy_user_session_path, method: :delete, class: 'btn btn--no-border'
       span.material-symbols-outlined.icon--outlined.icon--medium.icon--weight-normal.icon--normal-emphasis logout
       | Log Out
