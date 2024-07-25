@@ -25,4 +25,4 @@ main.container
               - game.go_fish.players.each do |player|
                 span = player.name
           td = game.go_fish.round_results.size
-          td = game.formatted_time(game.finished_at - game.started_at)
+          td = format_time(game.finished_at - game.started_at)

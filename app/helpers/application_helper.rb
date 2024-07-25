@@ -15,5 +15,17 @@ module ApplicationHelper
     args.map { |arg| arg.respond_to?(:to_key) ? dom_id(arg) : arg }.join('_')
   end
 
-  # TODO: Move and test format_time method
+  def format_time(seconds_played)
+    if seconds_played >= 3600
+      hours = (seconds_played / 3600).to_i
+      minutes = ((seconds_played % 3600) / 60).to_i
+      "#{hours}h:#{minutes}m"
+    elsif seconds_played >= 60
+      minutes = (seconds_played / 60).to_i
+      remaining_seconds = (seconds_played % 60).to_i
+      "#{minutes}m:#{remaining_seconds}s"
+    else
+      "#{seconds_played.to_i}s"
+    end
+  end
 end

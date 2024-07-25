@@ -25,4 +25,4 @@ main.container
           td = entry.losses
           td #{entry.win_rate}%
           td = entry.games_played
-          td = entry.formatted_time
+          td = format_time(entry.seconds_played)

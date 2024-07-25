@@ -20,14 +20,6 @@ RSpec.describe 'Games', type: :system, js: true do
     click_button 'Ask for Cards'
   end
 
-  def current_player
-    game1.go_fish.current_player
-  end
-
-  def next_player
-    game1.go_fish.players.reject { |player| player.user_id == current_player.user_id }.first
-  end
-
   before do
     login_as(user1, scope: :user)
     visit games_path
@@ -143,12 +135,14 @@ RSpec.describe 'Games', type: :system, js: true do
 
           it 'broadcasts when another user takes their turn' do
             visit game_path(game1)
-            expect(page).to have_content("#{current_player.name}'s Turn")
+            expect(page).not_to have_content('asked')
             take_turn(game1)
-            expect(page).to have_content("#{next_player.name}'s Turn")
-            game1.play_round!(current_player.user_id, current_player.hand.first.rank)
 
-            expect(page).to have_content("#{current_player.name}'s Turn")
+            expect(page).to have_content('asked', count: 1)
+            game1.reload
+            game1.play_round!(game1.go_fish.current_player.user_id, game1.go_fish.current_player.hand.first.rank)
+            game1.reload
+            expect(page).to have_content('asked', count: 2)
           end
 
           it "increases number of cards in user1's hand" do

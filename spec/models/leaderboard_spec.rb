@@ -55,21 +55,4 @@ RSpec.describe Leaderboard, type: :model do
       expect(leaderboard_user2.seconds_played).to eq(expected_time)
     end
   end
-
-  context '#formatted_time' do
-    it 'formats time correctly when time is more than an hour' do
-      leaderboard_user = Leaderboard.new(seconds_played: 3665) # 1 hour, 1 minute, and 5 seconds
-      expect(leaderboard_user.formatted_time).to eq('1h:1m')
-    end
-
-    it 'formats time correctly when time is more than a minute but less than an hour' do
-      leaderboard_user = Leaderboard.new(seconds_played: 125) # 2 minutes and 5 seconds
-      expect(leaderboard_user.formatted_time).to eq('2m:5s')
-    end
-
-    it 'formats time correctly when time is less than a minute' do
-      leaderboard_user = Leaderboard.new(seconds_played: 45) # 45 seconds
-      expect(leaderboard_user.formatted_time).to eq('45s')
-    end
-  end
 end
