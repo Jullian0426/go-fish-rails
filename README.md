@@ -43,7 +43,7 @@ Due to the nature of this application, unit tests are prominent and handle most 
 Capybara is used to simulate the user experience of the application through the browser, ensuring the proper front-end structure and intractability.
 
 # Links to:
-## [Deployed Application]https://go-fish-rails-falling-thunder-6181.fly.dev
+## [Deployed Application](https://go-fish-rails-falling-thunder-6181.fly.dev)
 ## [GitHub repo](http://github.com/julliancalkins/go-fish-rails)
 
 # Deployment
